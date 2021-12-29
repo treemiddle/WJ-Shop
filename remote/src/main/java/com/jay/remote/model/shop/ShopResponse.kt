@@ -1,7 +1,7 @@
 package com.jay.remote.model.shop
 
 data class ShopResponse(
-    val saleCategories: SaleCategories
+    val saleCategories: List<SaleCategories>
 )
 
 data class SaleCategories(
@@ -16,6 +16,6 @@ data class Sale(
     val isPreOrder: Boolean,
     val isSoldOut: Boolean,
     val name: String,
-    val originalPrice: Double,
-    val salePrice: Double
+    val originalPrice: Int,
+    val salePrice: Int
 )

@@ -45,9 +45,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideGson(): Gson {
-        return GsonBuilder().setLenient()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create()
+        return GsonBuilder().setLenient().create()
     }
 
     @Provides
