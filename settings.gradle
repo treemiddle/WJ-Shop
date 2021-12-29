@@ -8,3 +8,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "WJShop"
 include ':app'
+include ':remote'
+include ':local'
+include ':data'
+include ':domain'
