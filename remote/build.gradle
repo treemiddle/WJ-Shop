@@ -19,9 +19,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "WJ_BASE_URL", "\"https://us-central1-weverse-d7a79.cloudfunctions.net/api/v1/\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "WJ_BASE_URL", "\"https://us-central1-weverse-d7a79.cloudfunctions.net/api/v1/\""
         }
     }
     compileOptions {
