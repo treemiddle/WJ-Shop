@@ -9,10 +9,10 @@ import retrofit2.http.Path
 interface ShopApi {
 
     @GET("shopinfo")
-    fun getShopInfo(): Single<ShopInfoRespons>
+    fun getShops(): Single<ShopInfoRespons>
 
     @GET("shop/{ShopId}")
-    fun getShop(
+    fun getGoods(
         @Path("ShopId") shopId: Int
     ): Single<ShopResponse>
 

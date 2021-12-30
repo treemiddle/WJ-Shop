@@ -1,6 +1,7 @@
 package com.jay.data.di
 
 import com.jay.data.WJRepositoryImpl
+import com.jay.data.local.WJLocalDataSource
 import com.jay.data.remote.WJRemoteDataSource
 import com.jay.domain.repository.WJRepository
 import dagger.Module
@@ -15,7 +16,11 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideWJRepository(remoteDataSource: WJRemoteDataSource): WJRepository {
-        return WJRepositoryImpl(remoteDataSource)
+    fun provideWJRepository(
+        remoteDataSource: WJRemoteDataSource,
+        localDataSource: WJLocalDataSource,
+    ): WJRepository {
+        return WJRepositoryImpl(remoteDataSource, localDataSource)
     }
+
 }

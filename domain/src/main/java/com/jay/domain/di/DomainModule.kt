@@ -1,6 +1,7 @@
 package com.jay.domain.di
 
 import com.jay.domain.repository.WJRepository
+import com.jay.domain.usecase.LocalUseCase
 import com.jay.domain.usecase.WJUseCase
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,14 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideWJUseCase(wjRepository: WJRepository): WJUseCase {
-        return WJUseCase(wjRepository)
+    fun provideWJUseCase(repository: WJRepository): WJUseCase {
+        return WJUseCase(repository)
     }
+
+    @Provides
+    @Singleton
+    fun provideLocalUseCase(repository: WJRepository): LocalUseCase {
+        return LocalUseCase(repository)
+    }
+
 }

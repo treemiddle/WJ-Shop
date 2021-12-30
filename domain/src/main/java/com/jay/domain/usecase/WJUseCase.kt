@@ -8,11 +8,12 @@ import javax.inject.Inject
 
 class WJUseCase @Inject constructor(private val repository: WJRepository) {
 
-    fun getShopInfo(): Single<List<DomainShopInfo>> {
-        return repository.getShopInfo()
+    fun getShops(): Single<List<DomainShopInfo>> {
+        return repository.getShops()
     }
 
-    fun getShop(shopId: Int): Single<List<DomainShop>> {
-        return repository.getShop(shopId)
+    fun getGoods(shopId: Int): Single<List<DomainShop>> {
+        return repository.getGoods(shopId)
     }
+
 }

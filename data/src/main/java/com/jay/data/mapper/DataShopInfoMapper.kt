@@ -29,4 +29,24 @@ object DataShopInfoMapper : DataMapper<List<DataShopInfo>, List<DomainShopInfo>>
         }
     }
 
+    fun DomainShopInfo.mapToLocal(): DataShopInfo {
+        return DataShopInfo(
+            id = this.id,
+            imageUrl = this.imageUrl,
+            name = this.name,
+            type = this.type,
+            shortName = this.shortName
+        )
+    }
+
+    fun DataShopInfo.mapToDomain(): DomainShopInfo {
+        return DomainShopInfo(
+            id = this.id,
+            imageUrl = this.imageUrl,
+            name = this.name,
+            type = this.type,
+            shortName = this.shortName
+        )
+    }
+
 }

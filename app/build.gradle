@@ -41,6 +41,7 @@ dependencies {
     implementation project(":local")
     implementation project(":data")
     implementation project(":domain")
+    implementation project(":common")
 
     api deps.androidx.core_ktx
     api deps.androidx.appcompat

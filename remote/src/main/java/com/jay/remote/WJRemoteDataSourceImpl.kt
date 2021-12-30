@@ -13,13 +13,13 @@ class WJRemoteDataSourceImpl @Inject constructor(
     private val shopApi: ShopApi
 ) : WJRemoteDataSource {
 
-    override fun getShopInfo(): Single<List<DataShopInfo>> {
-        return shopApi.getShopInfo()
+    override fun getShops(): Single<List<DataShopInfo>> {
+        return shopApi.getShops()
             .map(RemoteShopInfoMapper::mapToData)
     }
 
-    override fun getShop(shopId: Int): Single<List<DataShop>> {
-        return shopApi.getShop(shopId)
+    override fun getGoods(shopId: Int): Single<List<DataShop>> {
+        return shopApi.getGoods(shopId)
             .map(RemoteShopMapper::mapToData)
     }
 

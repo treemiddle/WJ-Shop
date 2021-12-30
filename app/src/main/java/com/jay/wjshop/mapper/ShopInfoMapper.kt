@@ -29,4 +29,14 @@ object ShopInfoMapper : PresentationMapper<List<DomainShopInfo>, List<ShopInfo>>
         }
     }
 
+    fun ShopInfo.mapToDomain(): DomainShopInfo {
+        return DomainShopInfo(
+            id = this.id,
+            imageUrl = this.imageUrl,
+            name = this.name,
+            type = this.type,
+            shortName = this.shortName
+        )
+    }
+
 }

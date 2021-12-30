@@ -6,4 +6,5 @@ data class DataShopInfo(
     val name: String,
     val type: String,
     val shortName: String,
+    val time: Long = System.currentTimeMillis()
 )

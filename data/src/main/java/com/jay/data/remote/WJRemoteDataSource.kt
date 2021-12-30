@@ -6,7 +6,7 @@ import io.reactivex.Single
 
 interface WJRemoteDataSource {
 
-    fun getShopInfo(): Single<List<DataShopInfo>>
+    fun getShops(): Single<List<DataShopInfo>>
 
-    fun getShop(shopId: Int): Single<List<DataShop>>
+    fun getGoods(shopId: Int): Single<List<DataShop>>
 }
