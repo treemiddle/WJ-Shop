@@ -9,6 +9,7 @@ import com.jay.domain.usecase.WJUseCase
 import com.jay.wjshop.mapper.ShopInfoMapper
 import com.jay.wjshop.mapper.ShopInfoMapper.mapToDomain
 import com.jay.wjshop.mapper.ShopMapper
+import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopInfo
 import com.jay.wjshop.utils.dummyShops
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,6 +47,10 @@ class WJViewModel @Inject constructor(
     private val _shopList = MutableLiveData<List<ShopInfo>>()
     val shopList: LiveData<List<ShopInfo>>
         get() = _shopList
+
+    private val _goodsList = MutableLiveData<List<Shop>?>()
+    val goodsList: LiveData<List<Shop>?>
+        get() = _goodsList
 
     // mutalbelivedata 바꿔 테스트용임 지금
     private val _toast = MutableLiveData<String>()
@@ -136,14 +141,15 @@ class WJViewModel @Inject constructor(
 
     // 선택된 샵의 따라 굿즈리스트를 가져옴
     private fun getGoods(shopId: Int) {
-//        wjUseCase.getGoods(shopId)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .map(ShopMapper::mapToPresentation)
-//            .subscribe({
-//                makeLog(javaClass.simpleName, "$it")
-//            }, { t ->
-//                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")
-//            }).addTo(compositeDisposable)
+        wjUseCase.getGoods(shopId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(ShopMapper::mapToPresentation)
+            .subscribe({
+                makeLog(javaClass.simpleName, "$it")
+                _goodsList.value = it
+            }, { t ->
+                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")
+            }).addTo(compositeDisposable)
     }
 
     // 선택된 샵을 로컬에 저장

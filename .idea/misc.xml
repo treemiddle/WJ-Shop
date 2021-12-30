@@ -6,6 +6,9 @@
         <entry key="app/src/main/res/drawable/bg_shop_type.xml" value="0.125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout/activity_wj.xml" value="0.18262411347517732" />
+        <entry key="app/src/main/res/layout/fragment_demo.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_test.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_test1.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_goods.xml" value="0.22760416666666666" />
       </map>
     </option>

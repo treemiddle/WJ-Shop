@@ -1,14 +1,17 @@
 package com.jay.wjshop.utils.bindingadapter
 
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import com.jay.wjshop.R
-import com.jay.wjshop.model.ShopInfo
+import com.google.android.material.tabs.TabLayout
+import com.jay.wjshop.model.Shop
 
-@BindingAdapter("setShopImage")
-fun bindShopImage(iv: ImageView, shop: ShopInfo?) {
-    shop ?: return
+@BindingAdapter("setShopCategory")
+fun bindShopCategory(tabLayout: TabLayout, shopList: List<Shop>?) {
+    shopList ?: return
 
-    iv.background = ContextCompat.getDrawable(iv.context, R.drawable.ic_check)
+    tabLayout.removeAllTabs()
+
+    for (i in shopList.indices) {
+        val tab = tabLayout.newTab().setText(shopList[i].category)
+        tabLayout.addTab(tab)
+    }
 }

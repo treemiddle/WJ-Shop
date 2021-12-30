@@ -10,10 +10,6 @@
         <variable
             name="vm"
             type="com.jay.wjshop.WJViewModel" />
-
-        <variable
-            name="shopInfo"
-            type="com.jay.wjshop.model.ShopInfo" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -24,8 +20,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ctl_header"
@@ -61,10 +57,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    setShopImage="@{shopInfo}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:background="@drawable/ic_check"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0"
@@ -86,14 +82,23 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
+                setShopCategory="@{vm.goodsList}"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/teal_200"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/teal_200"
+                app:tabTextColor="@android:color/darker_gray">
+
+            </com.google.android.material.tabs.TabLayout>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="500dp"
+                android:overScrollMode="never" />
 
             <TextView
                 android:id="@+id/tv_current_product"
@@ -105,6 +110,43 @@
                 android:textSize="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ctl_header" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:layout_width="300dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp" />
+
+                    <Button
+                        android:layout_width="300dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp" />
+
+                    <Button
+                        android:layout_width="300dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp" />
+
+                    <Button
+                        android:layout_width="300dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp" />
+
+                </LinearLayout>
+
+            </ScrollView>
 
         </LinearLayout>
 

@@ -3,6 +3,7 @@ package com.jay.data
 import com.jay.data.local.WJLocalDataSource
 import com.jay.data.mapper.DataShopInfoMapper
 import com.jay.data.mapper.DataShopInfoMapper.mapToLocal
+import com.jay.data.mapper.DataShopMapper
 import com.jay.data.remote.WJRemoteDataSource
 import com.jay.domain.model.DomainShop
 import com.jay.domain.model.DomainShopInfo
@@ -37,7 +38,8 @@ class WJRepositoryImpl @Inject constructor(
     }
 
     override fun getGoods(shopId: Int): Single<List<DomainShop>> {
-        TODO("Not yet implemented")
+        return remoteDataSource.getGoods(shopId)
+            .map { DataShopMapper.mapToDomain(it) }
     }
 
     private fun getRemoteShops(): Single<List<DomainShopInfo>> {
