@@ -51,6 +51,8 @@ dependencies {
     api deps.androidx.livedata_ktx
     api deps.androidx.viewmodel_ktx
 
+    api deps.flexbox.layout
+
     testApi deps.test.junit
     androidTestApi deps.test.runner
     androidTestApi deps.test.espresso_core

@@ -39,6 +39,10 @@ class WJViewModel @Inject constructor(
     val headerShopName: LiveData<String?>
         get() = _headerShopName
 
+    private val _headerType = MutableLiveData<String?>()
+    val headerType: LiveData<String?>
+        get() = _headerType
+
     private val _shopList = MutableLiveData<List<ShopInfo>>()
     val shopList: LiveData<List<ShopInfo>>
         get() = _shopList
@@ -68,15 +72,19 @@ class WJViewModel @Inject constructor(
     private fun setShopList(shopInfos: List<ShopInfo>) {
         _shopList.value = shopInfos
 
-        setHeaderShopName()
+        setHeaderData()
     }
 
     private fun getShopList(): List<ShopInfo> {
         return _shopList.value ?: emptyList()
     }
 
-    private fun setHeaderShopName() {
-        _headerShopName.value = getShopList().firstOrNull()?.name
+    private fun setHeaderData() {
+        val shop = getShopList().first()
+
+        _headerShopName.value = shop.name
+        _headerType.value = shop.type
+        getGoods(shop.id)
     }
 
     private fun changeHeaderShopName() {
@@ -87,6 +95,7 @@ class WJViewModel @Inject constructor(
 
         _toast.value = "0에서 ${getShopList().lastIndex}까지 랜덤하게 이름 뽑아요~"
         _headerShopName.value = shop.name
+        _headerType.value = shop.type
         updateShop(shop)
         getGoods(shop.id)
     }
@@ -127,14 +136,14 @@ class WJViewModel @Inject constructor(
 
     // 선택된 샵의 따라 굿즈리스트를 가져옴
     private fun getGoods(shopId: Int) {
-        wjUseCase.getGoods(shopId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .map(ShopMapper::mapToPresentation)
-            .subscribe({
-                makeLog(javaClass.simpleName, "$it")
-            }, { t ->
-                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")
-            }).addTo(compositeDisposable)
+//        wjUseCase.getGoods(shopId)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .map(ShopMapper::mapToPresentation)
+//            .subscribe({
+//                makeLog(javaClass.simpleName, "$it")
+//            }, { t ->
+//                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")
+//            }).addTo(compositeDisposable)
     }
 
     // 선택된 샵을 로컬에 저장

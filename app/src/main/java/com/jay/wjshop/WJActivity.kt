@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import com.google.android.material.appbar.AppBarLayout
 import com.jay.wjshop.databinding.ActivityWjBinding
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +30,10 @@ class WJActivity : AppCompatActivity() {
 
     private fun setupObserver() {
         with(viewModel) {
+            shopList.observe(this@WJActivity, {
+                binding.shopInfo = it.first()
+                binding.executePendingBindings()
+            })
             toast.observe(this@WJActivity, {
                 shortToast(it)
             })

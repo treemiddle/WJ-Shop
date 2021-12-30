@@ -53,14 +53,16 @@ ext {
 
             gson              : '2.8.8',
 
-            room_version      : '2.4.0'
+            room_version      : '2.4.0',
+
+            flexbox           : '3.0.0'
     ]
 
     deps = [
             classpath: [
-                    gradle         : "com.android.tools.build:gradle:$versions.gradle",
-                    kotlin         : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
-                    hilt           : "com.google.dagger:hilt-android-gradle-plugin:$versions.hilt.plugin"
+                    gradle: "com.android.tools.build:gradle:$versions.gradle",
+                    kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+                    hilt  : "com.google.dagger:hilt-android-gradle-plugin:$versions.hilt.plugin"
             ],
 
             test     : [
@@ -95,6 +97,10 @@ ext {
                     java   : "io.reactivex.rxjava2:rxjava:$versions.rx.java",
                     kotlin : "io.reactivex.rxjava2:rxkotlin:$versions.rx.kotlin",
                     android: "io.reactivex.rxjava2:rxandroid:$versions.rx.android"
+            ],
+
+            flexbox  : [
+                    layout: "com.google.android.flexbox:flexbox:$versions.flexbox"
             ]
     ]
 
