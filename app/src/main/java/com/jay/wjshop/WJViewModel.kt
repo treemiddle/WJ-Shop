@@ -2,6 +2,8 @@ package com.jay.wjshop
 
 import androidx.lifecycle.ViewModel
 import com.jay.domain.usecase.WJUseCase
+import com.jay.wjshop.mapper.ShopInfoMapper
+import com.jay.wjshop.mapper.ShopMapper
 import com.jay.wjshop.mapper.shopInfoMapToPresentation
 import com.jay.wjshop.mapper.shopMapToPresentation
 import com.jay.wjshop.utils.makeLog
@@ -17,14 +19,14 @@ class WJViewModel @Inject constructor(private val wjUseCase: WJUseCase) : ViewMo
     private val compositeDisposable by lazy(::CompositeDisposable)
 
     init {
-        //getShopInfo()
+        getShopInfo()
         getShop()
     }
 
     private fun getShopInfo() {
         wjUseCase.getShopInfo()
             .observeOn(AndroidSchedulers.mainThread())
-            .map { it.shopInfoMapToPresentation() }
+            .map(ShopInfoMapper::mapToPresentation)
             .subscribe({
                 makeLog(javaClass.simpleName, "$it")
             }, { t ->
@@ -35,7 +37,7 @@ class WJViewModel @Inject constructor(private val wjUseCase: WJUseCase) : ViewMo
     private fun getShop() {
         wjUseCase.getShop(1)
             .observeOn(AndroidSchedulers.mainThread())
-            .map { it.shopMapToPresentation() }
+            .map(ShopMapper::mapToPresentation)
             .subscribe({
                 makeLog(javaClass.simpleName, "$it")
             }, { t ->

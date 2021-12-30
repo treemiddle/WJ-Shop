@@ -1,6 +1,5 @@
 package com.jay.remote.api
 
-import com.jay.remote.model.shop.SaleCategories
 import com.jay.remote.model.shop.ShopResponse
 import com.jay.remote.model.shopinfo.ShopInfoRespons
 import io.reactivex.Single
@@ -15,6 +14,6 @@ interface ShopApi {
     @GET("shop/{ShopId}")
     fun getShop(
         @Path("ShopId") shopId: Int
-    ): Single<List<SaleCategories>>
+    ): Single<ShopResponse>
 
 }

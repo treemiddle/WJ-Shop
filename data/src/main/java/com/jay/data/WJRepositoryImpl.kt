@@ -1,7 +1,7 @@
 package com.jay.data
 
-import com.jay.data.mapper.shopInfoMapToDomain
-import com.jay.data.mapper.shopMapToDomain
+import com.jay.data.mapper.DataShopInfoMapper
+import com.jay.data.mapper.DataShopMapper
 import com.jay.data.remote.WJRemoteDataSource
 import com.jay.domain.model.DomainShop
 import com.jay.domain.model.DomainShopInfo
@@ -14,10 +14,12 @@ class WJRepositoryImpl @Inject constructor(
 ) : WJRepository {
 
     override fun getShopInfo(): Single<List<DomainShopInfo>> {
-        return remoteDataSource.getShopInfo().map { it.shopInfoMapToDomain() }
+        return remoteDataSource.getShopInfo()
+            .map(DataShopInfoMapper::mapToDomain)
     }
 
     override fun getShop(shopId: Int): Single<List<DomainShop>> {
-        return remoteDataSource.getShop(shopId).map { it.shopMapToDomain() }
+        return remoteDataSource.getShop(shopId)
+            .map(DataShopMapper::mapToDomain)
     }
 }
