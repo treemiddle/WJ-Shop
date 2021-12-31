@@ -1,10 +1,9 @@
-package com.jay.wjshop
+package com.jay.wjshop.ui
 
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.jay.common.makeLog
 
 class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
@@ -12,10 +11,12 @@ class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapte
 
     override fun getItemCount() = fragments.size
 
-    override fun createFragment(position: Int) = CategoryFragment.newInstance()
+    override fun createFragment(position: Int) = CategoryFragment.newInstance(position)
 
+    @SuppressLint("NotifyDataSetChanged")
     fun add(fragment: Fragment) {
         fragments.add(fragment)
+        //notifyDataSetChanged()
         notifyItemInserted(fragments.size - 1)
     }
 

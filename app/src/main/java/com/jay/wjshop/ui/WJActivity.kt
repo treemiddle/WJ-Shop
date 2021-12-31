@@ -1,12 +1,11 @@
-package com.jay.wjshop
+package com.jay.wjshop.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.jay.common.makeLog
+import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityWjBinding
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.utils.ext.shortToast
@@ -59,15 +58,13 @@ class WJActivity : AppCompatActivity() {
 
     private fun addFragment(shops: List<Shop>) {
         for (i in shops.indices) {
-            viewPagerAdapter.add(CategoryFragment.newInstance())
+            viewPagerAdapter.add(CategoryFragment.newInstance(i))
         }
     }
 
     private fun deleteAll() {
-        if (viewPagerAdapter.itemCount != 0) {
-            binding.tabLayout.removeAllTabs()
-            viewPagerAdapter.clear()
-        }
+        binding.tabLayout.removeAllTabs()
+        viewPagerAdapter.clear()
     }
 
 }

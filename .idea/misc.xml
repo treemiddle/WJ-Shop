@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/bg_shop_type.xml" value="0.125" />
+        <entry key="app/src/main/res/drawable/bg_sold_out.xml" value="0.10555555555555556" />
+        <entry key="app/src/main/res/drawable/loading.xml" value="0.14444444444444443" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22760416666666666" />
         <entry key="app/src/main/res/layout/activity_wj.xml" value="0.18262411347517732" />
         <entry key="app/src/main/res/layout/fragment_category.xml" value="0.18262411347517732" />

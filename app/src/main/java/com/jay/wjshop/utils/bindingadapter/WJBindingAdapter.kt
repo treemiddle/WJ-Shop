@@ -1,17 +1,5 @@
 package com.jay.wjshop.utils.bindingadapter
 
-import android.view.View
-import androidx.databinding.BindingAdapter
-import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.jay.common.makeLog
-import com.jay.wjshop.CategoryFragment
-import com.jay.wjshop.ViewPagerAdapter
-import com.jay.wjshop.WJViewModel
-import com.jay.wjshop.model.Shop
-
 //@BindingAdapter("setShopCategory", "setViewModel")
 //fun bindTabLayout(
 //    tabLayout: TabLayout,

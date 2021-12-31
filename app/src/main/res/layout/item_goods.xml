@@ -3,33 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.jay.wjshop.model.ShopSales" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_line"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="200dp" />
 
         <ImageView
             android:id="@+id/iv_poster"
+            setImageUrl="@{item.imageUrl}"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:adjustViewBounds="true"
+            android:background="@android:color/darker_gray"
             android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@id/guide_line"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/ic_launcher_background" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_sold_out"
+            setSoldOut="@{item.soldOut}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="품절" />
 
         <TextView
             android:id="@+id/tv_pre_order"
+            setPreOrder="@{item.preOrder}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +63,7 @@
             android:id="@+id/tv_goods"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{item.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +72,7 @@
 
         <TextView
             android:id="@+id/tv_sale_price"
+            setSalePrice="@{item.salePrice}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,6 +81,8 @@
 
         <TextView
             android:id="@+id/tv_origin_price"
+            setOriginalPrice="@{item.originalPrice}"
+            setSalePrice="@{item.salePrice}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/tv_sale_price"

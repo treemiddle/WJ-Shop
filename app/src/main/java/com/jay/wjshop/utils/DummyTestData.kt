@@ -82,21 +82,21 @@ fun dummyGoods(): List<Shop> {
     return listOf(
         Shop(
             id = 1,
-            category = "test1",
+            category = "TEST 1",
             salesList = listOf(
                 ShopSales(
                     id = 1,
-                    name = "1-test1",
-                    imageUrl = "asdf",
+                    name = "블랙핑크",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = false,
                     isSoldOut = true,
-                    originalPrice = 500,
-                    salePrice = 2000
+                    originalPrice = 100,
+                    salePrice = 100
                 ),
                 ShopSales(
                     id = 2,
-                    name = "1-test2",
-                    imageUrl = "asdf",
+                    name = "위버스",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/BTS_logo_%282017%29.png/600px-BTS_logo_%282017%29.png",
                     isPreOrder = true,
                     isSoldOut = true,
                     originalPrice = 14000,
@@ -104,17 +104,17 @@ fun dummyGoods(): List<Shop> {
                 ),
                 ShopSales(
                     id = 3,
-                    name = "1-test3",
-                    imageUrl = "asdf",
+                    name = "헤드셋",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = false,
                     isSoldOut = false,
-                    originalPrice = 4000,
-                    salePrice = 2000
+                    originalPrice = 300,
+                    salePrice = 300
                 ),
                 ShopSales(
                     id = 4,
-                    name = "1-test4",
-                    imageUrl = "asdf",
+                    name = "허니버터아몬드",
+                    imageUrl = "",
                     isPreOrder = false,
                     isSoldOut = true,
                     originalPrice = 300000,
@@ -124,12 +124,12 @@ fun dummyGoods(): List<Shop> {
         ),
         Shop(
             id = 2,
-            category = "test2",
+            category = "TEST 2",
             salesList = listOf(
                 ShopSales(
                     id = 1,
-                    name = "2-test1",
-                    imageUrl = "asdf",
+                    name = "IOS",
+                    imageUrl = "",
                     isPreOrder = true,
                     isSoldOut = false,
                     originalPrice = 12000,
@@ -137,8 +137,8 @@ fun dummyGoods(): List<Shop> {
                 ),
                 ShopSales(
                     id = 2,
-                    name = "2-test2",
-                    imageUrl = "asdf",
+                    name = "AOS",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = true,
                     isSoldOut = true,
                     originalPrice = 145000,
@@ -148,12 +148,12 @@ fun dummyGoods(): List<Shop> {
         ),
         Shop(
             id = 3,
-            category = "test3",
+            category = "TEST 3",
             salesList = listOf(
                 ShopSales(
                     id = 1,
-                    name = "3-test1",
-                    imageUrl = "asdf",
+                    name = "WJ",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = true,
                     isSoldOut = true,
                     originalPrice = 103300,
@@ -161,8 +161,8 @@ fun dummyGoods(): List<Shop> {
                 ),
                 ShopSales(
                     id = 2,
-                    name = "3-test2",
-                    imageUrl = "asdf",
+                    name = "지수",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = false,
                     isSoldOut = false,
                     originalPrice = 978300,
@@ -170,8 +170,8 @@ fun dummyGoods(): List<Shop> {
                 ),
                 ShopSales(
                     id = 3,
-                    name = "3-test3",
-                    imageUrl = "asdf",
+                    name = "말왕",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = true,
                     isSoldOut = true,
                     originalPrice = 98000,

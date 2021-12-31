@@ -51,8 +51,7 @@ dependencies {
     api deps.androidx.life_cycle_ktx
     api deps.androidx.livedata_ktx
     api deps.androidx.viewmodel_ktx
-
-    api deps.flexbox.layout
+    api deps.androidx.swipe_layout
 
     testApi deps.test.junit
     androidTestApi deps.test.runner
@@ -66,4 +65,7 @@ dependencies {
     api deps.rx.java
     api deps.rx.kotlin
     api deps.rx.android
+
+    api deps.glide.glide
+    annotationProcessor deps.glide.annotation
 }

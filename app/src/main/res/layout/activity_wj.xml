@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.jay.wjshop.WJViewModel" />
+            type="com.jay.wjshop.ui.WJViewModel" />
 
         <!--        <variable-->
         <!--            name="fragment_activity"-->
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="40dp"
-                android:text="상품"
+                android:text="@string/txt_goods"
                 android:textSize="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ctl_header" />
@@ -107,7 +107,7 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:overScrollMode="never" />
 
             <TextView
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="40dp"
-                android:text="최근 본 상품"
+                android:text="@string/txt_recently_goods"
                 android:textSize="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ctl_header" />
@@ -157,6 +157,7 @@
                 </LinearLayout>
 
             </ScrollView>
+
 
         </LinearLayout>
 

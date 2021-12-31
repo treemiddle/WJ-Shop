@@ -1,8 +1,7 @@
-package com.jay.wjshop
+package com.jay.wjshop.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.jay.common.makeLog
 import com.jay.domain.usecase.LocalUseCase
 import com.jay.domain.usecase.WJUseCase
@@ -11,11 +10,11 @@ import com.jay.wjshop.mapper.ShopInfoMapper.mapToDomain
 import com.jay.wjshop.mapper.ShopMapper
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopInfo
+import com.jay.wjshop.ui.base.WJBaseViewModel
 import com.jay.wjshop.utils.dummyGoods
 import com.jay.wjshop.utils.dummyShops
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -27,15 +26,10 @@ import javax.inject.Inject
 class WJViewModel @Inject constructor(
     private val wjUseCase: WJUseCase,
     private val localUseCase: LocalUseCase
-) : ViewModel() {
+) : WJBaseViewModel() {
 
-    private val compositeDisposable by lazy(::CompositeDisposable)
     private val headerClickSubject = PublishSubject.create<Unit>()
     private val localShopSubject = BehaviorSubject.create<List<ShopInfo>>()
-
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
 
     private val _headerShopName = MutableLiveData<String?>()
     val headerShopName: LiveData<String?>
@@ -75,14 +69,6 @@ class WJViewModel @Inject constructor(
     }
 
     private fun localShopList(shops: List<ShopInfo>) = localShopSubject.onNext(shops)
-
-    private fun showLoading() {
-        _isLoading.value = true
-    }
-
-    private fun hideLoading() {
-        _isLoading.value = false
-    }
 
     private fun setShopList(shopInfos: List<ShopInfo>) {
         _shopList.value = shopInfos
@@ -205,11 +191,6 @@ class WJViewModel @Inject constructor(
                 localShopList(emptyList())
             }).addTo(compositeDisposable)
 
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
     }
 
 }

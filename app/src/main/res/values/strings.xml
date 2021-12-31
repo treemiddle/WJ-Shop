@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">WJShop</string>
+    
+    <string name="goods_sold_out">품절</string>
+    <string name="goods_pre_order">예약판매</string>
+    <string name="txt_all_goods_more">모든 상품 더보기</string>
+    <string name="txt_goods">상품</string>
+    <string name="txt_recently_goods">최근 본 상품</string>
+    <string name="selected_goods">%s 상품을 선택하셨습니다.</string>
 </resources>

@@ -55,7 +55,7 @@ ext {
 
             room_version      : '2.4.0',
 
-            flexbox           : '3.0.0'
+            swipe_layout      : '1.1.0'
     ]
 
     deps = [
@@ -78,7 +78,8 @@ ext {
                     constraintlayout: "androidx.constraintlayout:constraintlayout:$versions.androidx.constraintlayout",
                     life_cycle_ktx  : "androidx.lifecycle:lifecycle-runtime-ktx:$versions.androidx.lifecycle",
                     livedata_ktx    : "androidx.lifecycle:lifecycle-livedata-ktx:$versions.androidx.lifecycle",
-                    viewmodel_ktx   : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidx.lifecycle"
+                    viewmodel_ktx   : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidx.lifecycle",
+                    swipe_layout    : "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipe_layout"
             ],
 
             hilt     : [
@@ -97,10 +98,6 @@ ext {
                     java   : "io.reactivex.rxjava2:rxjava:$versions.rx.java",
                     kotlin : "io.reactivex.rxjava2:rxkotlin:$versions.rx.kotlin",
                     android: "io.reactivex.rxjava2:rxandroid:$versions.rx.android"
-            ],
-
-            flexbox  : [
-                    layout: "com.google.android.flexbox:flexbox:$versions.flexbox"
             ]
     ]
 
