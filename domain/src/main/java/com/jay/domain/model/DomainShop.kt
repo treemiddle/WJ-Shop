@@ -12,6 +12,6 @@ data class DomainSales(
     val imageUrl: String,
     val isPreOrder: Boolean,
     val isSoldOut: Boolean,
-    val originalPrice: Int,
-    val salePrice: Int
+    val originalPrice: String,
+    val salePrice: String
 )

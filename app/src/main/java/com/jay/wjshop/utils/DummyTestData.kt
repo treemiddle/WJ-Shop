@@ -1,5 +1,6 @@
 package com.jay.wjshop.utils
 
+import com.jay.common.toPrice
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopInfo
 import com.jay.wjshop.model.ShopSales
@@ -78,7 +79,7 @@ fun dummyShops(): List<ShopInfo> {
     )
 }
 
-fun dummyGoods(): List<Shop> {
+fun dummyGoods1(): List<Shop> {
     return listOf(
         Shop(
             id = 1,
@@ -90,8 +91,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = false,
                     isSoldOut = true,
-                    originalPrice = 100,
-                    salePrice = 100
+                    originalPrice = 100.toPrice(),
+                    salePrice = 100.toPrice()
                 ),
                 ShopSales(
                     id = 2,
@@ -99,8 +100,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/BTS_logo_%282017%29.png/600px-BTS_logo_%282017%29.png",
                     isPreOrder = true,
                     isSoldOut = true,
-                    originalPrice = 14000,
-                    salePrice = 20060
+                    originalPrice = 1400.toPrice(),
+                    salePrice = 1500.toPrice()
                 ),
                 ShopSales(
                     id = 3,
@@ -108,8 +109,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = false,
                     isSoldOut = false,
-                    originalPrice = 300,
-                    salePrice = 300
+                    originalPrice = 76495.toPrice(),
+                    salePrice = 467867.toPrice()
                 ),
                 ShopSales(
                     id = 4,
@@ -117,8 +118,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "",
                     isPreOrder = false,
                     isSoldOut = true,
-                    originalPrice = 300000,
-                    salePrice = 22033
+                    originalPrice = 9847183.toPrice(),
+                    salePrice = 95741485.toPrice()
                 )
             )
         ),
@@ -132,8 +133,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "",
                     isPreOrder = true,
                     isSoldOut = false,
-                    originalPrice = 12000,
-                    salePrice = 20300
+                    originalPrice = 123456789.toPrice(),
+                    salePrice = 1234567890.toPrice()
                 ),
                 ShopSales(
                     id = 2,
@@ -141,8 +142,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = true,
                     isSoldOut = true,
-                    originalPrice = 145000,
-                    salePrice = 9000
+                    originalPrice = 371834.toPrice(),
+                    salePrice = 938491.toPrice()
                 )
             )
         ),
@@ -156,8 +157,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = true,
                     isSoldOut = true,
-                    originalPrice = 103300,
-                    salePrice = 9000
+                    originalPrice = 103300.toPrice(),
+                    salePrice = 9000.toPrice()
                 ),
                 ShopSales(
                     id = 2,
@@ -165,8 +166,8 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = false,
                     isSoldOut = false,
-                    originalPrice = 978300,
-                    salePrice = 509340
+                    originalPrice = 978300.toPrice(),
+                    salePrice = 509340.toPrice()
                 ),
                 ShopSales(
                     id = 3,
@@ -174,8 +175,52 @@ fun dummyGoods(): List<Shop> {
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = true,
                     isSoldOut = true,
-                    originalPrice = 98000,
-                    salePrice = 5900
+                    originalPrice = 98000.toPrice(),
+                    salePrice = 5900.toPrice()
+                )
+            )
+        )
+    )
+}
+
+fun dummyGoods2(): List<Shop> {
+    return listOf(
+        Shop(
+            id = 1,
+            category = "탭아이템1",
+            salesList = listOf(
+                ShopSales(
+                    id = 1,
+                    name = "블랙핑크",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
+                    isPreOrder = false,
+                    isSoldOut = true,
+                    originalPrice = 100.toPrice(),
+                    salePrice = 100.toPrice()
+                ),
+                ShopSales(
+                    id = 2,
+                    name = "허니버터",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/BTS_logo_%282017%29.png/600px-BTS_logo_%282017%29.png",
+                    isPreOrder = true,
+                    isSoldOut = true,
+                    originalPrice = 1400.toPrice(),
+                    salePrice = 1500.toPrice()
+                )
+            )
+        ),
+        Shop(
+            id = 2,
+            category = "탭아이템2",
+            salesList = listOf(
+                ShopSales(
+                    id = 1,
+                    name = "무지카드",
+                    imageUrl = "",
+                    isPreOrder = true,
+                    isSoldOut = false,
+                    originalPrice = 123456789.toPrice(),
+                    salePrice = 1234567890.toPrice()
                 )
             )
         )

@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.jay.common.makeLog
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityWjBinding
 import com.jay.wjshop.model.Shop
@@ -24,6 +27,7 @@ class WJActivity : AppCompatActivity() {
         setupBinding()
         setupObserver()
         initPagerAdapter()
+        setupTabLayout()
     }
 
     private fun setupBinding() {
@@ -35,7 +39,15 @@ class WJActivity : AppCompatActivity() {
     private fun setupObserver() {
         with(viewModel) {
             goodsList.observe(this@WJActivity, {
-                it?.let { shops -> setupPagerAdapter(shops) }
+                it?.let { shops ->
+//                    removeAll()
+//                    addFragment(shops)
+//                    setupPagerAdapter(shops)
+                    removeTabItem()
+                    removeFragment()
+                    addTabItem(shops)
+                    addFragment(shops)
+                }
             })
             toast.observe(this@WJActivity, {
                 shortToast(it)
@@ -45,26 +57,68 @@ class WJActivity : AppCompatActivity() {
 
     private fun initPagerAdapter() {
         binding.viewPager.adapter = viewPagerAdapter
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
+            }
+        })
     }
 
-    private fun setupPagerAdapter(shops: List<Shop>) {
-        deleteAll()
-        addFragment(shops)
-
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = shops[position].category
-        }.attach()
+    private fun setupTabLayout() {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.let { binding.viewPager.currentItem = it.position }
+            }
+        })
     }
 
-    private fun addFragment(shops: List<Shop>) {
+    private fun addTabItem(shops: List<Shop>) {
         for (i in shops.indices) {
-            viewPagerAdapter.add(CategoryFragment.newInstance(i))
+            val tab = binding.tabLayout.newTab().setText(shops[i].category)
+            binding.tabLayout.addTab(tab)
         }
     }
 
-    private fun deleteAll() {
-        binding.tabLayout.removeAllTabs()
-        viewPagerAdapter.clear()
+    private fun removeTabItem() {
+        if (binding.tabLayout.tabCount > 0) {
+            binding.tabLayout.removeAllTabs()
+        }
     }
+
+    private fun addFragment(shops: List<Shop>) {
+        shops.forEachIndexed { index, _ ->
+            viewPagerAdapter.add(CategoryFragment.newInstance(index))
+        }
+    }
+
+    private fun removeFragment() {
+        if (viewPagerAdapter.itemCount > 0) {
+            viewPagerAdapter.clear()
+        }
+    }
+
+//    private fun setupPagerAdapter(shops: List<Shop>) {
+//        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+//            tab.text = shops[position].category
+//        }.attach()
+//    }
+//
+//    private fun addFragment(shops: List<Shop>) {
+//        shops.forEachIndexed { index, _ ->
+//            viewPagerAdapter.add(CategoryFragment.newInstance(index))
+//        }
+//    }
+//
+//    private fun removeAll() {
+//        val fragmentCount = viewPagerAdapter.itemCount
+//        val tabCount = binding.tabLayout.tabCount
+//
+//        if (fragmentCount != 0 || tabCount != 0) {
+//            viewPagerAdapter.clear()
+//            binding.tabLayout.removeAllTabs()
+//        }
+//    }
 
 }

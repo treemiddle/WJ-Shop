@@ -1,5 +1,6 @@
 package com.jay.remote.mapper
 
+import com.jay.common.toPrice
 import com.jay.data.model.DataSales
 import com.jay.data.model.DataShop
 import com.jay.remote.model.shop.Sale
@@ -20,8 +21,8 @@ object RemoteShopMapper : RemoteMapper<ShopResponse, List<DataShop>> {
                         imageUrl = sale.imageUrl,
                         isPreOrder = sale.isPreOrder,
                         isSoldOut = sale.isSoldOut,
-                        originalPrice = sale.originalPrice,
-                        salePrice = sale.salePrice
+                        originalPrice = sale.originalPrice.toPrice(),
+                        salePrice = sale.salePrice.toPrice()
                     )
                 }
             )
@@ -41,8 +42,8 @@ object RemoteShopMapper : RemoteMapper<ShopResponse, List<DataShop>> {
                             imageUrl = sale.imageUrl,
                             isPreOrder = sale.isPreOrder,
                             isSoldOut = sale.isSoldOut,
-                            originalPrice = sale.originalPrice,
-                            salePrice = sale.salePrice
+                            originalPrice = sale.originalPrice.toInt(),
+                            salePrice = sale.salePrice.toInt()
                         )
                     }
                 )

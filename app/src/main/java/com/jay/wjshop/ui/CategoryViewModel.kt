@@ -2,6 +2,7 @@ package com.jay.wjshop.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.jay.common.makeLog
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopSales
 import com.jay.wjshop.ui.base.WJBaseViewModel

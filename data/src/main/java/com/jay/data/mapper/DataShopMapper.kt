@@ -1,5 +1,6 @@
 package com.jay.data.mapper
 
+import com.jay.common.toPrice
 import com.jay.data.model.DataSales
 import com.jay.data.model.DataShop
 import com.jay.domain.model.DomainSales

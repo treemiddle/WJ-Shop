@@ -5,15 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.jay.common.makeLog
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.FragmentCategoryBinding
 import com.jay.wjshop.utils.ext.shortToast
+import com.jay.wjshop.utils.getRecyclerAnimation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -69,6 +72,7 @@ class CategoryFragment : Fragment() {
 
     private fun initAdapter() {
         binding.rvGoods.adapter = adapter
+        binding.rvGoods.animation = getRecyclerAnimation(context)
         binding.rvGoods.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,

@@ -11,10 +11,12 @@ import com.jay.wjshop.mapper.ShopMapper
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopInfo
 import com.jay.wjshop.ui.base.WJBaseViewModel
-import com.jay.wjshop.utils.dummyGoods
+import com.jay.wjshop.utils.dummyGoods1
+import com.jay.wjshop.utils.dummyGoods2
 import com.jay.wjshop.utils.dummyShops
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -30,6 +32,7 @@ class WJViewModel @Inject constructor(
 
     private val headerClickSubject = PublishSubject.create<Unit>()
     private val localShopSubject = BehaviorSubject.create<List<ShopInfo>>()
+    private var disposable: Disposable? = null
 
     private val _headerShopName = MutableLiveData<String?>()
     val headerShopName: LiveData<String?>
@@ -55,6 +58,9 @@ class WJViewModel @Inject constructor(
     private val _toast = MutableLiveData<String>()
     val toast: LiveData<String>
         get() = _toast
+
+    // 테스트 인덱스용
+    private val _testIndex = MutableLiveData(0)
 
     init {
         registerRx()
@@ -95,21 +101,36 @@ class WJViewModel @Inject constructor(
     private fun changeHeaderShopName() {
         if (getShopList().isEmpty()) return
 
-        val random = (0..getShopList().lastIndex).random()
-        val shop = getShopList()[random]
+//        val random = (0..getShopList().lastIndex).random()
+//        val shop = getShopList()[random]
 
-        _toast.value = "0에서 ${getShopList().lastIndex}까지 랜덤하게 이름 뽑아요~"
+        val index = _testIndex.value
+        val shop = getShopList()[index!!]
+
+        //_toast.value = "0에서 ${getShopList().lastIndex}까지 랜덤하게 이름 뽑아요~"
         _headerShopName.value = shop.name
         _headerType.value = shop.type
         updateShop(shop)
         getGoods(shop.id)
+
+
+        if (index == 0) {
+            _testIndex.value = 1
+        } else {
+            _testIndex.value = 0
+        }
     }
 
     private fun registerRx() {
         compositeDisposable.addAll(
             headerClickSubject.throttleFirst(750, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { changeHeaderShopName() },
+                .subscribe({
+                    makeLog(javaClass.simpleName, "들어옴 헤더클릭")
+                    changeHeaderShopName()
+               }, {
+                    makeLog(javaClass.simpleName, "들어옴 헤더: ${it.localizedMessage}")
+                }),
 
             localShopSubject.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -141,12 +162,23 @@ class WJViewModel @Inject constructor(
 
     // 선택된 샵의 따라 굿즈리스트를 가져옴
     private fun getGoods(shopId: Int) {
-        _goodsList.value = dummyGoods()
-//        wjUseCase.getGoods(shopId)
+        //_goodsList.value = dummyGoods()
+        if (shopId == 1) {
+            _goodsList.value = dummyGoods1()
+        } else {
+            _goodsList.value = dummyGoods2()
+        }
+//        disposable?.let {
+//            if (!it.isDisposed) {
+//                it.dispose()
+//            }
+//        }
+//
+//        disposable = wjUseCase.getGoods(shopId)
 //            .observeOn(AndroidSchedulers.mainThread())
 //            .map(ShopMapper::mapToPresentation)
 //            .subscribe({
-//                makeLog(javaClass.simpleName, "$it")
+//                makeLog(javaClass.simpleName, "들어옴 remote ${it.size}")
 //                _goodsList.value = it
 //            }, { t ->
 //                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")

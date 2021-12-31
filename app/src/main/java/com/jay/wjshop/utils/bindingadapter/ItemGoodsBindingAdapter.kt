@@ -1,5 +1,6 @@
 package com.jay.wjshop.utils.bindingadapter
 
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -35,17 +36,18 @@ fun bindPreOrder(tv: TextView, isPreOrder: Boolean) = if (isPreOrder) {
 }
 
 @BindingAdapter("setSalePrice")
-fun bindSalePrice(tv: TextView, salePrice: Int) {
-    tv.text = salePrice.toString()
+fun bindSalePrice(tv: TextView, salePrice: String) {
+    tv.text = salePrice
 }
 
 @BindingAdapter("setOriginalPrice", "setSalePrice")
-fun bindOriginalAndSalePrice(tv: TextView, originalPrice: Int, salePrice: Int) {
+fun bindOriginalAndSalePrice(tv: TextView, originalPrice: String, salePrice: String) {
     if (originalPrice == salePrice) {
         tv.visibility = View.GONE
         tv.text = null
     } else {
         tv.visibility = View.VISIBLE
-        tv.text = originalPrice.toString()
+        tv.text = originalPrice
+        tv.paintFlags = STRIKE_THRU_TEXT_FLAG
     }
 }
