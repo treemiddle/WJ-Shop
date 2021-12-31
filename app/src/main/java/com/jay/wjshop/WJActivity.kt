@@ -6,7 +6,9 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.jay.common.makeLog
 import com.jay.wjshop.databinding.ActivityWjBinding
+import com.jay.wjshop.model.Shop
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +24,7 @@ class WJActivity : AppCompatActivity() {
 
         setupBinding()
         setupObserver()
-        setupPagerAdapter()
+        initPagerAdapter()
     }
 
     private fun setupBinding() {
@@ -33,27 +35,39 @@ class WJActivity : AppCompatActivity() {
 
     private fun setupObserver() {
         with(viewModel) {
+            goodsList.observe(this@WJActivity, {
+                it?.let { shops -> setupPagerAdapter(shops) }
+            })
             toast.observe(this@WJActivity, {
                 shortToast(it)
             })
         }
     }
 
-
-    private fun setupPagerAdapter() {
+    private fun initPagerAdapter() {
         binding.viewPager.adapter = viewPagerAdapter
+    }
 
-        for (i in 0..9) {
-            viewPagerAdapter.addFragment(CategoryFragment.newInstance(i))
+    private fun setupPagerAdapter(shops: List<Shop>) {
+        deleteAll()
+        addFragment(shops)
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = shops[position].category
+        }.attach()
+    }
+
+    private fun addFragment(shops: List<Shop>) {
+        for (i in shops.indices) {
+            viewPagerAdapter.add(CategoryFragment.newInstance())
         }
-//        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-//            tab.text = "Title $position"
-//            when (position) {
-////                0 -> tab.setIcon(R.drawable.ic_baseline_format_list_bulleted_24)
-////                1 -> tab.setIcon(R.drawable.ic_baseline_map_24)
-////                2 -> tab.setIcon(R.drawable.ic_baseline_info_24)
-//            }
-//        }.attach()
+    }
+
+    private fun deleteAll() {
+        if (viewPagerAdapter.itemCount != 0) {
+            binding.tabLayout.removeAllTabs()
+            viewPagerAdapter.clear()
+        }
     }
 
 }

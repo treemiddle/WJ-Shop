@@ -11,6 +11,7 @@ import com.jay.wjshop.mapper.ShopInfoMapper.mapToDomain
 import com.jay.wjshop.mapper.ShopMapper
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopInfo
+import com.jay.wjshop.utils.dummyGoods
 import com.jay.wjshop.utils.dummyShops
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -52,6 +53,10 @@ class WJViewModel @Inject constructor(
     val goodsList: LiveData<List<Shop>?>
         get() = _goodsList
 
+    private val _pagerPosition = MutableLiveData<Int>()
+    val pagerPosition: LiveData<Int>
+        get() = _pagerPosition
+
     // mutalbelivedata 바꿔 테스트용임 지금
     private val _toast = MutableLiveData<String>()
     val toast: LiveData<String>
@@ -63,6 +68,11 @@ class WJViewModel @Inject constructor(
     }
 
     fun onHeaderClick() = headerClickSubject.onNext(Unit)
+
+    fun setPagerPosition(position: Int) {
+        makeLog(javaClass.simpleName, "들어왔다 포지션: $position")
+        _pagerPosition.value = position
+    }
 
     private fun localShopList(shops: List<ShopInfo>) = localShopSubject.onNext(shops)
 
@@ -82,6 +92,10 @@ class WJViewModel @Inject constructor(
 
     private fun getShopList(): List<ShopInfo> {
         return _shopList.value ?: emptyList()
+    }
+
+    fun getGoodsList(): List<Shop> {
+        return _goodsList.value ?: emptyList()
     }
 
     private fun setHeaderData() {
@@ -141,15 +155,16 @@ class WJViewModel @Inject constructor(
 
     // 선택된 샵의 따라 굿즈리스트를 가져옴
     private fun getGoods(shopId: Int) {
-        wjUseCase.getGoods(shopId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .map(ShopMapper::mapToPresentation)
-            .subscribe({
-                makeLog(javaClass.simpleName, "$it")
-                _goodsList.value = it
-            }, { t ->
-                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")
-            }).addTo(compositeDisposable)
+        _goodsList.value = dummyGoods()
+//        wjUseCase.getGoods(shopId)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .map(ShopMapper::mapToPresentation)
+//            .subscribe({
+//                makeLog(javaClass.simpleName, "$it")
+//                _goodsList.value = it
+//            }, { t ->
+//                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")
+//            }).addTo(compositeDisposable)
     }
 
     // 선택된 샵을 로컬에 저장

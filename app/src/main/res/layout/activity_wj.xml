@@ -10,6 +10,10 @@
         <variable
             name="vm"
             type="com.jay.wjshop.WJViewModel" />
+
+        <!--        <variable-->
+        <!--            name="fragment_activity"-->
+        <!--            type="androidx.fragment.app.FragmentActivity" />-->
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -80,9 +84,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ctl_header" />
 
+            <!--            setShopCategory="@{vm.goodsList}"-->
+            <!--            setViewModel="@{vm}"-->
+            <!--            setPosition="@{vm.pagerPosition}"-->
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
-                setShopCategory="@{vm.goodsList}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
@@ -94,6 +100,10 @@
 
             </com.google.android.material.tabs.TabLayout>
 
+            <!--            setPosition="@{vm.pagerPosition}"-->
+            <!--            setViewModel="@{vm}"-->
+            <!--            setShopCategory="@{vm.goodsList}"-->
+            <!--            setFragmentActivity="@{fragment_activity}"-->
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"

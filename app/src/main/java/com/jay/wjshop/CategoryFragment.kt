@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.jay.wjshop.databinding.FragmentCategoryBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CategoryFragment : Fragment() {
 
+    private val activityViewModel by activityViewModels<WJViewModel>()
     private lateinit var binding: FragmentCategoryBinding
 
     override fun onCreateView(
@@ -34,21 +36,12 @@ class CategoryFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        arguments?.getInt("test")?.let {
-            binding.tvId.text = it.toString()
-        }
+        binding.tvId.text = activityViewModel.getGoodsList().toString()
     }
 
     companion object {
-        fun newInstance(id: Int): CategoryFragment {
-            val fragment = CategoryFragment().apply {
-                arguments = Bundle().also {
-                    //it.putParcelableArrayList("", goodsList as ArrayList)
-                    it.putInt("test", id)
-                }
-            }
-
-            return fragment
+        fun newInstance(): CategoryFragment {
+            return CategoryFragment()
         }
     }
 
