@@ -2,8 +2,8 @@ package com.jay.local.di
 
 import com.jay.data.local.WJLocalDataSource
 import com.jay.local.WJLocalDataSourceImpl
+import com.jay.local.dao.GoodsDao
 import com.jay.local.dao.ShopDao
-import com.jay.local.dao.TestDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,14 +14,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object LocalDataSourceModule {
 
-    //todo TestDao
     @Provides
     @Singleton
     fun provideLocalDataSource(
         shopDao: ShopDao,
-        testDao: TestDao
+        goodsDao: GoodsDao
     ): WJLocalDataSource {
-        return WJLocalDataSourceImpl(shopDao, testDao)
+        return WJLocalDataSourceImpl(shopDao, goodsDao)
     }
     
 }

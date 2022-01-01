@@ -1,10 +1,10 @@
 package com.jay.data.local
 
-import com.jay.common.TestChildEntity
-import com.jay.common.TestParentEntity
-import com.jay.common.TestPerson
+import com.jay.data.model.DataGoods
+import com.jay.data.model.DataShopAndGoods
 import com.jay.data.model.DataShopInfo
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface WJLocalDataSource {
@@ -17,21 +17,10 @@ interface WJLocalDataSource {
 
     fun deleteAll(): Completable
 
-    //todo Test
-    /**
-     * Test
-     */
-    fun insertParent(parentEntity: TestParentEntity): Completable
+    fun insertGoods(goods: DataGoods): Completable
 
-    fun getParents(): Single<List<TestParentEntity>>
+    fun clearGoods(): Completable
 
-    fun clearParents(): Completable
+    fun getGoodsByShopId(shopId: Int): Flowable<DataShopAndGoods>
 
-    fun insertChild(childEntity: TestChildEntity): Completable
-
-    fun getChilds(): Single<List<TestChildEntity>>
-
-    fun clearChilds(): Completable
-
-    fun getChildByParentId(parentId: Int): Single<TestPerson>
 }

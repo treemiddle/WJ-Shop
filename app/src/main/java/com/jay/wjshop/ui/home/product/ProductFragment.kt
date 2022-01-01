@@ -1,4 +1,4 @@
-package com.jay.wjshop.ui
+package com.jay.wjshop.ui.home.product
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -11,27 +11,27 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.jay.common.makeLog
 import com.jay.wjshop.R
-import com.jay.wjshop.databinding.FragmentCategoryBinding
+import com.jay.wjshop.databinding.FragmentProductBinding
+import com.jay.wjshop.ui.home.WJViewModel
 import com.jay.wjshop.utils.ext.shortToast
 import com.jay.wjshop.utils.getRecyclerAnimation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CategoryFragment : Fragment() {
+class ProductFragment : Fragment() {
 
     private val activityViewModel by activityViewModels<WJViewModel>()
-    private val viewModel by viewModels<CategoryViewModel>()
+    private val viewModel by viewModels<ProductViewModel>()
 
     //todo nestedScrollview tablayout viewpager layout 잡아야해...그 전에 비지니스부터하자...
     //todo 스와이프 시 (2번쨰 포지션에서 샵 바꾸면 위치가 달라져있음)
-    private lateinit var binding: FragmentCategoryBinding
+    private lateinit var binding: FragmentProductBinding
     private val position by lazy { arguments?.getInt(FRAGMENT_POSITION) }
     private val adapter by lazy {
-        CategoryAdapter {
+        ProductAdapter {
             context?.shortToast(String.format(requireContext().getString(R.string.selected_goods), it.name))
-            makeLog(javaClass.simpleName, "current: ${activityViewModel.getCurrentShop()}")
+            viewModel.onClickGoods(it to activityViewModel.getCurrentShop())
         }
     }
 
@@ -42,7 +42,7 @@ class CategoryFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_category,
+            R.layout.fragment_product,
             container,
             false
         )
@@ -61,12 +61,12 @@ class CategoryFragment : Fragment() {
     private fun setupBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        position?.let { viewModel.setGoodsItem(activityViewModel.getGoodsList()[it]) }
+        position?.let { viewModel.setProducts(activityViewModel.getGoodsList()[it]) }
     }
 
     private fun setupObserver() {
         with(viewModel) {
-            goodsItem.observe(viewLifecycleOwner, {
+            product.observe(viewLifecycleOwner, {
                 adapter.submitList(it.salesList)
             })
         }
@@ -94,7 +94,7 @@ class CategoryFragment : Fragment() {
     companion object {
         private const val FRAGMENT_POSITION = "fragment_position"
 
-        fun newInstance(position: Int) = CategoryFragment().apply {
+        fun newInstance(position: Int) = ProductFragment().apply {
             arguments = bundleOf(
                 FRAGMENT_POSITION to position
             )

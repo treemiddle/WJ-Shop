@@ -1,8 +1,5 @@
 package com.jay.wjshop.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
 data class ShopInfo(
     val id: Int = 0,
     val imageUrl: String = "",
@@ -27,8 +24,18 @@ data class ShopSales(
     val salePrice: String
 )
 
-data class RecentlyGoods(
+data class Goods(
     val shopId: Int,
-    val categoryId: Int,
-    val goods: ShopSales
+    val id: Int,
+    val name: String,
+    val imageUrl: String,
+    val isPreOrder: Boolean,
+    val isSoldOut: Boolean,
+    val originalPrice: String,
+    val salePrice: String
+)
+
+data class ShopAndGoods(
+    val shop: ShopInfo,
+    val goodsList: List<Goods>
 )

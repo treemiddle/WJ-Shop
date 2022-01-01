@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.jay.wjshop.ui.CategoryViewModel" />
+            type="com.jay.wjshop.ui.home.product.ProductViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:spanCount="2"
             tools:itemCount="5"
-            tools:listitem="@layout/item_goods" />
+            tools:listitem="@layout/item_product" />
 
         <Button
             android:id="@+id/btn_more"

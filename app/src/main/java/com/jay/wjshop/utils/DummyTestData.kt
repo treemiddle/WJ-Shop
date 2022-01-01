@@ -171,7 +171,7 @@ fun dummyGoods2(): List<Shop> {
             category = "탭아이템1",
             salesList = listOf(
                 ShopSales(
-                    id = 1,
+                    id = 9763,
                     name = "블랙핑크",
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
                     isPreOrder = false,
@@ -180,7 +180,7 @@ fun dummyGoods2(): List<Shop> {
                     salePrice = 100.toPrice()
                 ),
                 ShopSales(
-                    id = 2,
+                    id = 3482,
                     name = "허니버터",
                     imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/BTS_logo_%282017%29.png/600px-BTS_logo_%282017%29.png",
                     isPreOrder = true,
@@ -195,7 +195,7 @@ fun dummyGoods2(): List<Shop> {
             category = "탭아이템2",
             salesList = listOf(
                 ShopSales(
-                    id = 1,
+                    id = 98931,
                     name = "무지카드",
                     imageUrl = "",
                     isPreOrder = true,

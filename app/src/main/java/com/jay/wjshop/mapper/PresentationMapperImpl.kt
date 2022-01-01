@@ -1,38 +1,70 @@
 package com.jay.wjshop.mapper
-import com.jay.domain.model.DomainShop
+
+import com.jay.domain.model.DomainGoods
+import com.jay.domain.model.DomainShopAndGoods
 import com.jay.domain.model.DomainShopInfo
-import com.jay.wjshop.model.Shop
+import com.jay.wjshop.model.Goods
+import com.jay.wjshop.model.ShopAndGoods
 import com.jay.wjshop.model.ShopInfo
 import com.jay.wjshop.model.ShopSales
 
-fun List<DomainShopInfo>.shopInfoMapToPresentation(): List<ShopInfo> {
-    return this.map {
-        ShopInfo(
-            id = it.id,
-            imageUrl = it.imageUrl,
-            name = it.name,
-            type = it.type,
-            shortName = it.shortName
-        )
-    }
+fun DomainShopAndGoods.mapToPresentation(): ShopAndGoods {
+    return ShopAndGoods(
+        shop = ShopInfo(
+            id = this.shop.id,
+            imageUrl = this.shop.imageUrl,
+            name = this.shop.name,
+            type = this.shop.type,
+            shortName = this.shop.shortName
+        ),
+        goodsList = this.goodsList.map {
+            Goods(
+                shopId = it.shopId,
+                id = it.id,
+                name = it.name,
+                imageUrl = it.imageUrl,
+                isPreOrder = it.isPreOrder,
+                isSoldOut = it.isSoldOut,
+                originalPrice = it.originalPrice,
+                salePrice = it.salePrice
+            )
+        }
+    )
 }
 
-fun List<DomainShop>.shopMapToPresentation(): List<Shop> {
-    return this.map {
-        Shop(
-            id = it.id,
-            category = it.category,
-            salesList = it.salesList.map { sale ->
-                ShopSales(
-                    id = sale.id,
-                    name = sale.name,
-                    imageUrl = sale.imageUrl,
-                    isPreOrder = sale.isPreOrder,
-                    isSoldOut = sale.isSoldOut,
-                    originalPrice = sale.originalPrice,
-                    salePrice = sale.salePrice
-                )
-            }
-        )
-    }
+fun ShopAndGoods.mapToDomain(): DomainShopAndGoods {
+    return DomainShopAndGoods(
+        shop = DomainShopInfo(
+            id = this.shop.id,
+            imageUrl = this.shop.imageUrl,
+            name = this.shop.name,
+            type = this.shop.type,
+            shortName = this.shop.shortName
+        ),
+        goodsList = this.goodsList.map {
+            DomainGoods(
+                shopId = it.shopId,
+                id = it.id,
+                name = it.name,
+                imageUrl = it.imageUrl,
+                isPreOrder = it.isPreOrder,
+                isSoldOut = it.isSoldOut,
+                originalPrice = it.originalPrice,
+                salePrice = it.salePrice
+            )
+        }
+    )
+}
+
+fun Goods.mapToDomain(): DomainGoods {
+    return DomainGoods(
+        shopId = this.shopId,
+        id = this.id,
+        name = this.name,
+        imageUrl = this.imageUrl,
+        isPreOrder = this.isPreOrder,
+        isSoldOut = this.isSoldOut,
+        originalPrice = this.originalPrice,
+        salePrice = this.salePrice
+    )
 }

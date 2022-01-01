@@ -1,11 +1,11 @@
 package com.jay.domain.repository
 
-import com.jay.common.TestChildEntity
-import com.jay.common.TestParentEntity
-import com.jay.common.TestPerson
+import com.jay.domain.model.DomainGoods
 import com.jay.domain.model.DomainShop
+import com.jay.domain.model.DomainShopAndGoods
 import com.jay.domain.model.DomainShopInfo
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface WJRepository {
@@ -16,23 +16,13 @@ interface WJRepository {
 
     fun deleteAllShops(): Completable
 
+    // remote
     fun getGoods(shopId: Int): Single<List<DomainShop>>
 
-    //todo Test
-    /**
-     * Test
-     */
-    fun insertParent(parentEntity: TestParentEntity): Completable
+    fun insertGoods(goods: DomainGoods): Completable
 
-    fun getParents(): Single<List<TestParentEntity>>
+    fun clearGoods(): Completable
 
-    fun clearParents(): Completable
+    fun getGoodsByShopId(shopdId: Int): Flowable<DomainShopAndGoods>
 
-    fun insertChild(childEntity: TestChildEntity): Completable
-
-    fun getChilds(): Single<List<TestChildEntity>>
-
-    fun clearChilds(): Completable
-
-    fun getChildByParentId(parentId: Int): Single<TestPerson>
 }

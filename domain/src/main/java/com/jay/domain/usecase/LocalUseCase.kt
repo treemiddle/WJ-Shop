@@ -1,11 +1,11 @@
 package com.jay.domain.usecase
 
-import com.jay.common.TestChildEntity
-import com.jay.common.TestParentEntity
-import com.jay.common.TestPerson
+import com.jay.domain.model.DomainGoods
+import com.jay.domain.model.DomainShopAndGoods
 import com.jay.domain.model.DomainShopInfo
 import com.jay.domain.repository.WJRepository
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -23,36 +23,16 @@ class LocalUseCase @Inject constructor(private val repository: WJRepository) {
         return repository.deleteAllShops()
     }
 
-    //todo Test
-    /**
-     * Test
-     */
-    fun insertParent(parentEntity: TestParentEntity): Completable {
-        return repository.insertParent(parentEntity)
+    fun insertGoods(goods: DomainGoods): Completable {
+        return repository.insertGoods(goods)
     }
 
-    fun getParents(): Single<List<TestParentEntity>> {
-        return repository.getParents()
+    fun clearGoods(): Completable {
+        return repository.clearGoods()
     }
 
-    fun clearParents(): Completable {
-        return repository.clearParents()
-    }
-
-    fun insertChild(childEntity: TestChildEntity): Completable {
-        return repository.insertChild(childEntity)
-    }
-
-    fun getChilds(): Single<List<TestChildEntity>> {
-        return repository.getChilds()
-    }
-
-    fun clearChilds(): Completable {
-        return repository.clearChilds()
-    }
-
-    fun getChildByParentId(parentId: Int): Single<TestPerson> {
-        return repository.getChildByParentId(parentId)
+    fun getGoodsByShopId(shopId: Int): Flowable<DomainShopAndGoods> {
+        return repository.getGoodsByShopId(shopId)
     }
 
 }

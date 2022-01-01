@@ -2,8 +2,8 @@ package com.jay.local.di
 
 import android.content.Context
 import androidx.room.Room
+import com.jay.local.dao.GoodsDao
 import com.jay.local.dao.ShopDao
-import com.jay.local.dao.TestDao
 import com.jay.local.database.WJDatabase
 import com.jay.local.prefs.PrefsHelper
 import com.jay.local.prefs.PrefsHelperImpl
@@ -42,10 +42,9 @@ object LocalModule {
         return database.shopDao()
     }
 
-    //todo Test
     @Provides
-    fun provideTEstDao(database: WJDatabase): TestDao {
-        return database.testDao()
+    fun provideGoods(database: WJDatabase): GoodsDao {
+        return database.goodsDao()
     }
 
 }

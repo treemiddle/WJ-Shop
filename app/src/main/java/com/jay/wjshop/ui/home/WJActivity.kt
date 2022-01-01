@@ -1,4 +1,4 @@
-package com.jay.wjshop.ui
+package com.jay.wjshop.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,11 +6,11 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import com.jay.common.makeLog
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityWjBinding
 import com.jay.wjshop.model.Shop
+import com.jay.wjshop.ui.home.product.ProductFragment
+import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +19,7 @@ class WJActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWjBinding
     private val viewModel by viewModels<WJViewModel>()
-    private val viewPagerAdapter by lazy { ViewPagerAdapter(this) }
+    private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +90,7 @@ class WJActivity : AppCompatActivity() {
     private fun addFragment(shops: List<Shop>) {
         shops.forEachIndexed { index, _ ->
             viewPagerAdapter.add(
-                CategoryFragment.newInstance(index)
+                ProductFragment.newInstance(index)
             )
         }
     }

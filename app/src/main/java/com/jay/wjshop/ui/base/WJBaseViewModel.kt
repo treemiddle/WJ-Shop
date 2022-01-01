@@ -3,6 +3,7 @@ package com.jay.wjshop.ui.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.jay.wjshop.utils.Event
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class WJBaseViewModel : ViewModel() {

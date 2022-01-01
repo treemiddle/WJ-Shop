@@ -1,14 +1,13 @@
-package com.jay.wjshop.ui
+package com.jay.wjshop.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.jay.common.TestChildEntity
-import com.jay.common.TestParentEntity
 import com.jay.common.makeLog
 import com.jay.domain.usecase.LocalUseCase
 import com.jay.domain.usecase.WJUseCase
 import com.jay.wjshop.mapper.ShopInfoMapper
 import com.jay.wjshop.mapper.ShopInfoMapper.mapToDomain
+import com.jay.wjshop.mapper.mapToPresentation
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopInfo
 import com.jay.wjshop.ui.base.WJBaseViewModel
@@ -64,7 +63,9 @@ class WJViewModel @Inject constructor(
 
     init {
         registerRx()
+        deleteShopAndGoods()
         getLocalShops()
+        getShopAndGoods()
     }
 
     fun onHeaderClick() = headerClickSubject.onNext(Unit)
@@ -129,7 +130,7 @@ class WJViewModel @Inject constructor(
                 .subscribe({
                     makeLog(javaClass.simpleName, "들어옴 헤더클릭")
                     changeHeaderShopName()
-               }, {
+                }, {
                     makeLog(javaClass.simpleName, "들어옴 헤더: ${it.localizedMessage}")
                 }),
 
@@ -162,7 +163,6 @@ class WJViewModel @Inject constructor(
 
     // 선택된 샵의 따라 굿즈리스트를 가져옴
     private fun getGoods(shopId: Int) {
-        //_goodsList.value = dummyGoods()
         if (shopId == 1) {
             _goodsList.value = dummyGoods1()
         } else {
@@ -222,127 +222,30 @@ class WJViewModel @Inject constructor(
                 makeLog(javaClass.simpleName, "local shops error: ${t.localizedMessage}")
                 localShopList(emptyList())
             }).addTo(compositeDisposable)
-
     }
 
-    //todo Test
-    /**
-     * Test
-     */
-    val _testParent = MutableLiveData<List<TestParentEntity>>()
-    val _testChild = MutableLiveData<List<TestChildEntity>>()
-    val _testParentIdList = MutableLiveData<List<Int>>()
-    fun insertChild() {
-        val list = mutableListOf<TestChildEntity>().apply {
-            for (i in 0..10) {
-                add(
-                    TestChildEntity(
-                        inParentId = _testParentIdList.value!!.random(),
-                        childId = i,
-                        childName = "자식 이름: $i"
-                    )
-                )
+    //todo 성공이나 init에 들어가기떄문에 shopId를 동적으로 어케 줄것이냐에 생각하기
+    private fun getShopAndGoods() {
+        val shopdId = (1..2).random()
+        localUseCase.getGoodsByShopId(shopdId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { it.mapToPresentation() }
+            .subscribe {
+                makeLog(javaClass.simpleName, "상품보고있어!!!")
+                makeLog(javaClass.simpleName, "size: ${it.goodsList.size}, shopdId: ${it.shop.id}")
             }
-        }
-        _testChild.value = list
-
-        list.forEach {
-            localUseCase.insertChild(it)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    makeLog(javaClass.simpleName, "child insert success: $it")
-                }, {
-                    makeLog(javaClass.simpleName, "child insert fail: ${it.localizedMessage}")
-                }).addTo(compositeDisposable)
-        }
+            .addTo(compositeDisposable)
     }
 
-    fun getChild() {
-        localUseCase.getChilds()
+    private fun deleteShopAndGoods() {
+        localUseCase.clearGoods()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                makeLog(javaClass.simpleName, "get child success: $it")
+                makeLog(javaClass.simpleName, "goods delete success")
             }, {
-                makeLog(javaClass.simpleName, "get child fail: ${it.localizedMessage}")
-            }).addTo(compositeDisposable)
-    }
-
-    fun clearChild() {
-        localUseCase.clearChilds()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                makeLog(javaClass.simpleName, "clear child success")
-            }, {
-                makeLog(javaClass.simpleName, "clear child fail: ${it.localizedMessage}")
-            }).addTo(compositeDisposable)
-    }
-
-    fun insertParent() {
-        makeLog(javaClass.simpleName, "??????????")
-        val list = mutableListOf<TestParentEntity>().apply {
-            for (i in 0..5) {
-                add(
-                    TestParentEntity(
-                        parentId = i,
-                        parentName = "부모이름: $i"
-                    )
-                )
-            }
-        }
-        makeLog(javaClass.simpleName, "???????: $list")
-        _testParent.value = list
-        _testParentIdList.value = list.map { it.parentId }
-        makeLog(javaClass.simpleName, "???????: ${_testParent.value}")
-        makeLog(javaClass.simpleName, "???????: ${_testParentIdList.value}")
-
-        list.forEach {
-            makeLog(javaClass.simpleName, "왜안가지?: $it")
-            localUseCase.insertParent(it)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    makeLog(javaClass.simpleName, "insert paret success")
-                }, {
-                    makeLog(javaClass.simpleName, "insert parent fail: ${it.localizedMessage}")
-                }).addTo(compositeDisposable)
-        }
-    }
-
-    fun getParent() {
-        localUseCase.getParents()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                makeLog(javaClass.simpleName, "get parent success: $it")
-            }, {
-                makeLog(javaClass.simpleName, "get parent fail: ${it.localizedMessage}")
-            }).addTo(compositeDisposable)
-    }
-
-    fun clearParents() {
-        localUseCase.clearParents()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                makeLog(javaClass.simpleName, "clear parent success")
-            }, {
-                makeLog(javaClass.simpleName, "clear parent fail: ${it.localizedMessage}")
-            }).addTo(compositeDisposable)
-    }
-
-    fun getChildByParentId() {
-        val parentId = _testParentIdList.value!!.random()
-        makeLog(javaClass.simpleName, "parentId: $parentId")
-        localUseCase.getChildByParentId(parentId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                makeLog(javaClass.simpleName, "get childbyid success: $it")
-            }, {
-                makeLog(javaClass.simpleName, "get childbyid fail: ${it.localizedMessage}")
+                makeLog(javaClass.simpleName, "goods delete fail: ${it.localizedMessage}")
             }).addTo(compositeDisposable)
     }
 

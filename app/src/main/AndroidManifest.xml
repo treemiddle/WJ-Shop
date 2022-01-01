@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WJShop">
         <activity
-            android:name=".ui.WJActivity"
+            android:name=".ui.home.WJActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

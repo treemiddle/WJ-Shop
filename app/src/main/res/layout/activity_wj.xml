@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.jay.wjshop.ui.WJViewModel" />
+            type="com.jay.wjshop.ui.home.WJViewModel" />
 
         <!--        <variable-->
         <!--            name="fragment_activity"-->
@@ -131,55 +131,6 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="8"
                 tools:listitem="@layout/item_recently_goods" />
-
-            <Button
-                android:id="@+id/btn_child_insert"
-                android:layout_width="wrap_content"
-                android:onClick="@{() -> vm.insertChild()}"
-                android:layout_height="wrap_content"
-                android:text="child_insert" />
-
-            <Button
-                android:id="@+id/btn_child_get"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> vm.getChild()}"
-                android:text="child_get" />
-
-            <Button
-                android:id="@+id/btn_clear"
-                android:onClick="@{() -> vm.clearChild()}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="child_clear" />
-
-            <Button
-                android:id="@+id/btn_paret_insert"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> vm.insertParent()}"
-                android:text="parent_insert" />
-
-            <Button
-                android:id="@+id/btn_parent_get"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> vm.getParent()}"
-                android:text="parent_get" />
-
-            <Button
-                android:id="@+id/btn_parent_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> vm.clearParents()}"
-                android:text="parent_clear" />
-
-            <Button
-                android:id="@+id/btn_child_get_by_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> vm.getChildByParentId()}"
-                android:text="get child by parent id" />
 
         </LinearLayout>
 

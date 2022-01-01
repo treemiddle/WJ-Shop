@@ -1,13 +1,26 @@
-package com.jay.data.mapper
+package com.jay.local.mapper
 
 import com.jay.data.model.DataGoods
 import com.jay.data.model.DataShopAndGoods
 import com.jay.data.model.DataShopInfo
-import com.jay.domain.model.DomainGoods
-import com.jay.domain.model.DomainShopAndGoods
-import com.jay.domain.model.DomainShopInfo
+import com.jay.local.model.GoodsEntity
+import com.jay.local.model.ShopAndGoodsEntity
+import com.jay.local.model.ShopEntity
 
-fun DomainGoods.mapToData(): DataGoods {
+fun DataGoods.mapToLocal(): GoodsEntity {
+    return GoodsEntity(
+        shopId = this.shopId,
+        id = this.id,
+        name = this.name,
+        imageUrl = this.imageUrl,
+        isPreOrder = this.isPreOrder,
+        isSoldOut = this.isSoldOut,
+        originalPrice = this.originalPrice,
+        salePrice = this.salePrice
+    )
+}
+
+fun GoodsEntity.mapToData(): DataGoods {
     return DataGoods(
         shopId = this.shopId,
         id = this.id,
@@ -20,30 +33,18 @@ fun DomainGoods.mapToData(): DataGoods {
     )
 }
 
-fun DataGoods.mapToDomain(): DomainGoods {
-    return DomainGoods(
-        shopId = this.shopId,
-        id = this.id,
-        name = this.name,
-        imageUrl = this.imageUrl,
-        isPreOrder = this.isPreOrder,
-        isSoldOut = this.isSoldOut,
-        originalPrice = this.originalPrice,
-        salePrice = this.salePrice
-    )
-}
-
-fun DataShopAndGoods.mapToDomain(): DomainShopAndGoods {
-    return DomainShopAndGoods(
-        shop = DomainShopInfo(
+fun DataShopAndGoods.mapToLocal(): ShopAndGoodsEntity {
+    return ShopAndGoodsEntity(
+        shop = ShopEntity(
             id = this.shop.id,
             imageUrl = this.shop.imageUrl,
             shortName = this.shop.shortName,
             name = this.shop.name,
-            type = this.shop.type
+            type = this.shop.type,
+            time = System.currentTimeMillis()
         ),
         goodsList = this.goodsList.map {
-            DomainGoods(
+            GoodsEntity(
                 shopId = it.shopId,
                 id = it.id,
                 name = it.name,
@@ -57,14 +58,15 @@ fun DataShopAndGoods.mapToDomain(): DomainShopAndGoods {
     )
 }
 
-fun DomainShopAndGoods.mapToData(): DataShopAndGoods {
+fun ShopAndGoodsEntity.mapToData(): DataShopAndGoods {
     return DataShopAndGoods(
         shop = DataShopInfo(
             id = this.shop.id,
             imageUrl = this.shop.imageUrl,
             shortName = this.shop.shortName,
             name = this.shop.name,
-            type = this.shop.type
+            type = this.shop.type,
+            time = System.currentTimeMillis()
         ),
         goodsList = this.goodsList.map {
             DataGoods(
