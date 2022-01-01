@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
-            android:background="@android:color/darker_gray"
+            android:background="@drawable/bg_item_goods"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="@id/guide_line"
             app:layout_constraintEnd_toEndOf="parent"

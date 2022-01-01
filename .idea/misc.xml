@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bg_item_goods.xml" value="0.1648148148148148" />
         <entry key="app/src/main/res/drawable/bg_shop_type.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/bg_sold_out.xml" value="0.10555555555555556" />
         <entry key="app/src/main/res/drawable/loading.xml" value="0.14444444444444443" />
@@ -13,6 +14,7 @@
         <entry key="app/src/main/res/layout/fragment_test.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_test1.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_goods.xml" value="0.22760416666666666" />
+        <entry key="app/src/main/res/layout/item_recently_goods.xml" value="0.18262411347517732" />
       </map>
     </option>
   </component>

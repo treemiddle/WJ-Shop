@@ -2,18 +2,18 @@ package com.jay.wjshop.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.jay.common.TestChildEntity
+import com.jay.common.TestParentEntity
 import com.jay.common.makeLog
 import com.jay.domain.usecase.LocalUseCase
 import com.jay.domain.usecase.WJUseCase
 import com.jay.wjshop.mapper.ShopInfoMapper
 import com.jay.wjshop.mapper.ShopInfoMapper.mapToDomain
-import com.jay.wjshop.mapper.ShopMapper
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.model.ShopInfo
 import com.jay.wjshop.ui.base.WJBaseViewModel
 import com.jay.wjshop.utils.dummyGoods1
 import com.jay.wjshop.utils.dummyGoods2
-import com.jay.wjshop.utils.dummyShops
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -50,9 +50,9 @@ class WJViewModel @Inject constructor(
     val goodsList: LiveData<List<Shop>?>
         get() = _goodsList
 
-    private val _pagerPosition = MutableLiveData<Int>()
-    val pagerPosition: LiveData<Int>
-        get() = _pagerPosition
+    private val _currentShop = MutableLiveData<ShopInfo>()
+    val currentShop: LiveData<ShopInfo>
+        get() = _currentShop
 
     // mutalbelivedata 바꿔 테스트용임 지금
     private val _toast = MutableLiveData<String>()
@@ -69,20 +69,16 @@ class WJViewModel @Inject constructor(
 
     fun onHeaderClick() = headerClickSubject.onNext(Unit)
 
-    fun setPagerPosition(position: Int) {
-        makeLog(javaClass.simpleName, "들어왔다 포지션: $position")
-        _pagerPosition.value = position
-    }
-
     private fun localShopList(shops: List<ShopInfo>) = localShopSubject.onNext(shops)
 
     private fun setShopList(shopInfos: List<ShopInfo>) {
+        makeLog(javaClass.simpleName, "이거 뭐지??: $shopInfos")
         _shopList.value = shopInfos
 
         setHeaderData()
     }
 
-    private fun getShopList(): List<ShopInfo> {
+    fun getShopList(): List<ShopInfo> {
         return _shopList.value ?: emptyList()
     }
 
@@ -90,9 +86,14 @@ class WJViewModel @Inject constructor(
         return _goodsList.value ?: emptyList()
     }
 
+    fun getCurrentShop(): ShopInfo? {
+        return _currentShop.value
+    }
+
     private fun setHeaderData() {
         val shop = getShopList().first()
 
+        _currentShop.value = shop
         _headerShopName.value = shop.name
         _headerType.value = shop.type
         getGoods(shop.id)
@@ -108,11 +109,11 @@ class WJViewModel @Inject constructor(
         val shop = getShopList()[index!!]
 
         //_toast.value = "0에서 ${getShopList().lastIndex}까지 랜덤하게 이름 뽑아요~"
+        _currentShop.value = shop
         _headerShopName.value = shop.name
         _headerType.value = shop.type
         updateShop(shop)
         getGoods(shop.id)
-
 
         if (index == 0) {
             _testIndex.value = 1
@@ -134,6 +135,7 @@ class WJViewModel @Inject constructor(
 
             localShopSubject.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
+                    makeLog(javaClass.simpleName, "뭐지??????????: $it")
                     if (it.isNotEmpty()) {
                         setShopList(it)
                     } else {
@@ -145,19 +147,17 @@ class WJViewModel @Inject constructor(
 
     // 샵리스트를 가져옴
     private fun getShops() {
-        // 통신안할려고 셋
-        setShopList(dummyShops())
-//        wjUseCase.getShops()
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .map(ShopInfoMapper::mapToPresentation)
-//            .doOnSubscribe { showLoading() }
-//            .doAfterSuccess { hideLoading() }
-//            .subscribe({
-//                makeLog(javaClass.simpleName, "$it")
-//                setShopList(it)
-//            }, { t ->
-//                makeLog(javaClass.simpleName, "shop info error: ${t.localizedMessage}")
-//            }).addTo(compositeDisposable)
+        wjUseCase.getShops()
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(ShopInfoMapper::mapToPresentation)
+            .doOnSubscribe { showLoading() }
+            .doAfterSuccess { hideLoading() }
+            .subscribe({
+                makeLog(javaClass.simpleName, "$it")
+                setShopList(it)
+            }, { t ->
+                makeLog(javaClass.simpleName, "shop info error: ${t.localizedMessage}")
+            }).addTo(compositeDisposable)
     }
 
     // 선택된 샵의 따라 굿즈리스트를 가져옴
@@ -223,6 +223,127 @@ class WJViewModel @Inject constructor(
                 localShopList(emptyList())
             }).addTo(compositeDisposable)
 
+    }
+
+    //todo Test
+    /**
+     * Test
+     */
+    val _testParent = MutableLiveData<List<TestParentEntity>>()
+    val _testChild = MutableLiveData<List<TestChildEntity>>()
+    val _testParentIdList = MutableLiveData<List<Int>>()
+    fun insertChild() {
+        val list = mutableListOf<TestChildEntity>().apply {
+            for (i in 0..10) {
+                add(
+                    TestChildEntity(
+                        inParentId = _testParentIdList.value!!.random(),
+                        childId = i,
+                        childName = "자식 이름: $i"
+                    )
+                )
+            }
+        }
+        _testChild.value = list
+
+        list.forEach {
+            localUseCase.insertChild(it)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    makeLog(javaClass.simpleName, "child insert success: $it")
+                }, {
+                    makeLog(javaClass.simpleName, "child insert fail: ${it.localizedMessage}")
+                }).addTo(compositeDisposable)
+        }
+    }
+
+    fun getChild() {
+        localUseCase.getChilds()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                makeLog(javaClass.simpleName, "get child success: $it")
+            }, {
+                makeLog(javaClass.simpleName, "get child fail: ${it.localizedMessage}")
+            }).addTo(compositeDisposable)
+    }
+
+    fun clearChild() {
+        localUseCase.clearChilds()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                makeLog(javaClass.simpleName, "clear child success")
+            }, {
+                makeLog(javaClass.simpleName, "clear child fail: ${it.localizedMessage}")
+            }).addTo(compositeDisposable)
+    }
+
+    fun insertParent() {
+        makeLog(javaClass.simpleName, "??????????")
+        val list = mutableListOf<TestParentEntity>().apply {
+            for (i in 0..5) {
+                add(
+                    TestParentEntity(
+                        parentId = i,
+                        parentName = "부모이름: $i"
+                    )
+                )
+            }
+        }
+        makeLog(javaClass.simpleName, "???????: $list")
+        _testParent.value = list
+        _testParentIdList.value = list.map { it.parentId }
+        makeLog(javaClass.simpleName, "???????: ${_testParent.value}")
+        makeLog(javaClass.simpleName, "???????: ${_testParentIdList.value}")
+
+        list.forEach {
+            makeLog(javaClass.simpleName, "왜안가지?: $it")
+            localUseCase.insertParent(it)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    makeLog(javaClass.simpleName, "insert paret success")
+                }, {
+                    makeLog(javaClass.simpleName, "insert parent fail: ${it.localizedMessage}")
+                }).addTo(compositeDisposable)
+        }
+    }
+
+    fun getParent() {
+        localUseCase.getParents()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                makeLog(javaClass.simpleName, "get parent success: $it")
+            }, {
+                makeLog(javaClass.simpleName, "get parent fail: ${it.localizedMessage}")
+            }).addTo(compositeDisposable)
+    }
+
+    fun clearParents() {
+        localUseCase.clearParents()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                makeLog(javaClass.simpleName, "clear parent success")
+            }, {
+                makeLog(javaClass.simpleName, "clear parent fail: ${it.localizedMessage}")
+            }).addTo(compositeDisposable)
+    }
+
+    fun getChildByParentId() {
+        val parentId = _testParentIdList.value!!.random()
+        makeLog(javaClass.simpleName, "parentId: $parentId")
+        localUseCase.getChildByParentId(parentId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                makeLog(javaClass.simpleName, "get childbyid success: $it")
+            }, {
+                makeLog(javaClass.simpleName, "get childbyid fail: ${it.localizedMessage}")
+            }).addTo(compositeDisposable)
     }
 
 }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -25,11 +24,14 @@ class CategoryFragment : Fragment() {
     private val activityViewModel by activityViewModels<WJViewModel>()
     private val viewModel by viewModels<CategoryViewModel>()
 
+    //todo nestedScrollview tablayout viewpager layout 잡아야해...그 전에 비지니스부터하자...
+    //todo 스와이프 시 (2번쨰 포지션에서 샵 바꾸면 위치가 달라져있음)
     private lateinit var binding: FragmentCategoryBinding
-    private val position by lazy { arguments?.getInt(POSITION) }
+    private val position by lazy { arguments?.getInt(FRAGMENT_POSITION) }
     private val adapter by lazy {
         CategoryAdapter {
             context?.shortToast(String.format(requireContext().getString(R.string.selected_goods), it.name))
+            makeLog(javaClass.simpleName, "current: ${activityViewModel.getCurrentShop()}")
         }
     }
 
@@ -65,7 +67,7 @@ class CategoryFragment : Fragment() {
     private fun setupObserver() {
         with(viewModel) {
             goodsItem.observe(viewLifecycleOwner, {
-                adapter.submitList(it)
+                adapter.submitList(it.salesList)
             })
         }
     }
@@ -90,11 +92,11 @@ class CategoryFragment : Fragment() {
     }
 
     companion object {
-        private const val POSITION = "position"
+        private const val FRAGMENT_POSITION = "fragment_position"
 
         fun newInstance(position: Int) = CategoryFragment().apply {
             arguments = bundleOf(
-                POSITION to position
+                FRAGMENT_POSITION to position
             )
         }
     }

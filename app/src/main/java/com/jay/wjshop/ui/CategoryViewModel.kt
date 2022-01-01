@@ -9,12 +9,16 @@ import com.jay.wjshop.ui.base.WJBaseViewModel
 
 class CategoryViewModel : WJBaseViewModel() {
 
-    private val _goodsItem = MutableLiveData<List<ShopSales>>()
-    val goodsItem: LiveData<List<ShopSales>>
+    private val _goodsItem = MutableLiveData<Shop>()
+    val goodsItem: LiveData<Shop>
         get() = _goodsItem
 
     fun setGoodsItem(shop: Shop) {
-        _goodsItem.value = shop.salesList
+        _goodsItem.value = shop
+    }
+
+    fun getGoodsItem(): Shop? {
+        return _goodsItem.value
     }
 
 }

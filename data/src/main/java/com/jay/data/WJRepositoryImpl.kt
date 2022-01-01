@@ -1,5 +1,8 @@
 package com.jay.data
 
+import com.jay.common.TestChildEntity
+import com.jay.common.TestParentEntity
+import com.jay.common.TestPerson
 import com.jay.data.local.WJLocalDataSource
 import com.jay.data.mapper.DataShopInfoMapper
 import com.jay.data.mapper.DataShopInfoMapper.mapToLocal
@@ -52,4 +55,35 @@ class WJRepositoryImpl @Inject constructor(
             }
     }
 
+    //todo Test
+    /**
+     * Test
+     */
+    override fun insertParent(parentEntity: TestParentEntity): Completable {
+        return localDataSource.insertParent(parentEntity)
+    }
+
+    override fun getParents(): Single<List<TestParentEntity>> {
+        return localDataSource.getParents()
+    }
+
+    override fun clearParents(): Completable {
+        return localDataSource.clearParents()
+    }
+
+    override fun insertChild(childEntity: TestChildEntity): Completable {
+        return localDataSource.insertChild(childEntity)
+    }
+
+    override fun getChilds(): Single<List<TestChildEntity>> {
+        return localDataSource.getChilds()
+    }
+
+    override fun clearChilds(): Completable {
+        return localDataSource.clearChilds()
+    }
+
+    override fun getChildByParentId(parentId: Int): Single<TestPerson> {
+        return localDataSource.getChildByParentId(parentId)
+    }
 }

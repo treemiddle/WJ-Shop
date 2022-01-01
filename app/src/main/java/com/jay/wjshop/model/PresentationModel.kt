@@ -27,8 +27,8 @@ data class ShopSales(
     val salePrice: String
 )
 
-@Parcelize
-data class BundleItem(
-    val fragmentIndex: Int,
-    val shopId: Int
-) : Parcelable
+data class RecentlyGoods(
+    val shopId: Int,
+    val categoryId: Int,
+    val goods: ShopSales
+)

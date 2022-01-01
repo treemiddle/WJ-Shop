@@ -89,7 +89,9 @@ class WJActivity : AppCompatActivity() {
 
     private fun addFragment(shops: List<Shop>) {
         shops.forEachIndexed { index, _ ->
-            viewPagerAdapter.add(CategoryFragment.newInstance(index))
+            viewPagerAdapter.add(
+                CategoryFragment.newInstance(index)
+            )
         }
     }
 
