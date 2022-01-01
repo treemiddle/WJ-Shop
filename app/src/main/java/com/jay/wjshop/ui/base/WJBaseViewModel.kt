@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jay.wjshop.utils.Event
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 abstract class WJBaseViewModel : ViewModel() {
 
@@ -20,6 +21,10 @@ abstract class WJBaseViewModel : ViewModel() {
 
     protected fun hideLoading() {
         _isLoading.value = false
+    }
+
+    protected fun addDisposable(disposable: Disposable) {
+        compositeDisposable.add(disposable)
     }
 
     override fun onCleared() {

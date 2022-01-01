@@ -20,12 +20,14 @@ class WJActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWjBinding
     private val viewModel by viewModels<WJViewModel>()
     private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
+    private val recentlyGoodsAdapter by lazy { RecentlyGoodsAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setupBinding()
         setupObserver()
+        initRecentlyGoodsAdapter()
         initPagerAdapter()
         setupTabLayout()
     }
@@ -48,6 +50,9 @@ class WJActivity : AppCompatActivity() {
                     addTabItem(shops)
                     addFragment(shops)
                 }
+            })
+            recentlyGoodsList.observe(this@WJActivity, {
+                recentlyGoodsAdapter.submitList(it)
             })
             toast.observe(this@WJActivity, {
                 shortToast(it)
@@ -99,6 +104,10 @@ class WJActivity : AppCompatActivity() {
         if (viewPagerAdapter.itemCount > 0) {
             viewPagerAdapter.clear()
         }
+    }
+
+    private fun initRecentlyGoodsAdapter() {
+        binding.rvRecently.adapter = recentlyGoodsAdapter
     }
 
 //    private fun setupPagerAdapter(shops: List<Shop>) {
