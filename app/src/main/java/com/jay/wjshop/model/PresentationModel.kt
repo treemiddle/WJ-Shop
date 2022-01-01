@@ -1,5 +1,16 @@
 package com.jay.wjshop.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+data class ShopInfo(
+    val id: Int = 0,
+    val imageUrl: String = "",
+    val name: String = "",
+    val type: String = "",
+    val shortName: String = "",
+)
+
 data class Shop(
     val id: Int,
     val category: String,
@@ -15,3 +26,9 @@ data class ShopSales(
     val originalPrice: String,
     val salePrice: String
 )
+
+@Parcelize
+data class BundleItem(
+    val fragmentIndex: Int,
+    val shopId: Int
+) : Parcelable
