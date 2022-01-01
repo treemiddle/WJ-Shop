@@ -16,7 +16,8 @@ fun DataGoods.mapToLocal(): GoodsEntity {
         isPreOrder = this.isPreOrder,
         isSoldOut = this.isSoldOut,
         originalPrice = this.originalPrice,
-        salePrice = this.salePrice
+        salePrice = this.salePrice,
+        time = System.currentTimeMillis()
     )
 }
 
@@ -52,7 +53,8 @@ fun DataShopAndGoods.mapToLocal(): ShopAndGoodsEntity {
                 isPreOrder = it.isPreOrder,
                 isSoldOut = it.isSoldOut,
                 originalPrice = it.originalPrice,
-                salePrice = it.salePrice
+                salePrice = it.salePrice,
+                time = System.currentTimeMillis()
             )
         }
     )

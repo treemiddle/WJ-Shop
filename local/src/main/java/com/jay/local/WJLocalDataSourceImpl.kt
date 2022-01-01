@@ -11,6 +11,7 @@ import com.jay.local.mapper.ShopInfoMapper.toListData
 import com.jay.local.mapper.ShopInfoMapper.toListEntity
 import com.jay.local.mapper.mapToData
 import com.jay.local.mapper.mapToLocal
+import com.jay.local.model.ShopAndGoodsEntity
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -48,6 +49,11 @@ class WJLocalDataSourceImpl @Inject constructor(
 
     override fun getGoodsByShopId(shopId: Int): Flowable<DataShopAndGoods> {
         return goodsDao.getGoodsByShopId(shopId)
+            .flatMap {
+                val sortList = it.goodsList.sortedByDescending { goodsEntity -> goodsEntity.time }
+
+                Flowable.just(ShopAndGoodsEntity(shop = it.shop, goodsList = sortList))
+            }
             .map { it.mapToData() }
     }
 

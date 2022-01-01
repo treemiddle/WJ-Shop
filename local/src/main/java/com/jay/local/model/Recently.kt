@@ -22,5 +22,6 @@ data class GoodsEntity(
     val isPreOrder: Boolean,
     val isSoldOut: Boolean,
     val originalPrice: String,
-    val salePrice: String
+    val salePrice: String,
+    val time: Long
 )

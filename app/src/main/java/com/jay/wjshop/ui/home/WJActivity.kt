@@ -52,7 +52,9 @@ class WJActivity : AppCompatActivity() {
                 }
             })
             recentlyGoodsList.observe(this@WJActivity, {
-                recentlyGoodsAdapter.submitList(it)
+                val newList = it.take(8)
+                recentlyGoodsAdapter.submitList(newList)
+                binding.rvRecently.smoothScrollToPosition(0)
             })
             toast.observe(this@WJActivity, {
                 shortToast(it)

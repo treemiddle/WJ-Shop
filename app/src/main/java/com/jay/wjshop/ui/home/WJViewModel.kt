@@ -67,6 +67,7 @@ class WJViewModel @Inject constructor(
     init {
         registerRx()
         getLocalShops()
+        deleteShopAndGoods()
     }
 
     fun onHeaderClick() = headerClickSubject.onNext(Unit)
@@ -121,16 +122,10 @@ class WJViewModel @Inject constructor(
         compositeDisposable.addAll(
             headerClickSubject.throttleFirst(750, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    makeLog(javaClass.simpleName, "들어옴 헤더클릭")
-                    changeHeaderShopName()
-                }, {
-                    makeLog(javaClass.simpleName, "들어옴 헤더: ${it.localizedMessage}")
-                }),
+                .subscribe { changeHeaderShopName() },
 
             localShopSubject.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    makeLog(javaClass.simpleName, "뭐지??????????: $it")
                     if (it.isNotEmpty()) {
                         setShopList(it)
                     } else {
@@ -223,7 +218,6 @@ class WJViewModel @Inject constructor(
             .doOnNext { hideLoading() }
             .subscribe {
                 setRecentlyGoodsList(it.goodsList)
-                makeLog(javaClass.simpleName, "상품보고있어!!!")
                 makeLog(javaClass.simpleName, "size: ${it.goodsList.size}, shopdId: ${it.shop.id}")
             }
             .addTo(compositeDisposable)

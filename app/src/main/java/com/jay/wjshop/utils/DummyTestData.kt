@@ -101,6 +101,24 @@ fun dummyGoods1(): List<Shop> {
                     isSoldOut = false,
                     originalPrice = 5.toPrice(),
                     salePrice = 5.toPrice()
+                ),
+                ShopSales(
+                    id = 898371,
+                    name = "다리",
+                    imageUrl = "",
+                    isPreOrder = false,
+                    isSoldOut = false,
+                    originalPrice = 5.toPrice(),
+                    salePrice = 5.toPrice()
+                ),
+                ShopSales(
+                    id = 8128,
+                    name = "마우스",
+                    imageUrl = "",
+                    isPreOrder = true,
+                    isSoldOut = true,
+                    originalPrice = 5512.toPrice(),
+                    salePrice = 5512.toPrice()
                 )
             )
         ),
@@ -125,6 +143,15 @@ fun dummyGoods1(): List<Shop> {
                     isSoldOut = true,
                     originalPrice = 371834.toPrice(),
                     salePrice = 938491.toPrice()
+                ),
+                ShopSales(
+                    id = 87342,
+                    name = "Flutter",
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/82/TXT_Logotipo.png",
+                    isPreOrder = false,
+                    isSoldOut = false,
+                    originalPrice = 134.toPrice(),
+                    salePrice = 9351.toPrice()
                 )
             )
         ),
