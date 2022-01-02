@@ -1,5 +1,7 @@
 package com.jay.wjshop.model
 
+import com.jay.common.ProductType
+
 data class ShopInfo(
     val id: Int = 0,
     val imageUrl: String = "",
@@ -22,7 +24,7 @@ data class ShopSales(
     val isSoldOut: Boolean,
     val originalPrice: String,
     val salePrice: String
-)
+) : ShopSalesModel
 
 data class Goods(
     val shopId: Int,
@@ -39,3 +41,9 @@ data class ShopAndGoods(
     val shop: ShopInfo,
     val goodsList: List<Goods>
 )
+
+data class ShopSalesButton(
+    val id: Int = 0
+) : ShopSalesModel
+
+interface ShopSalesModel

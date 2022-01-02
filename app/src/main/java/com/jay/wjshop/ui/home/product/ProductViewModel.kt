@@ -6,10 +6,7 @@ import com.jay.common.makeLog
 import com.jay.domain.model.DomainGoods
 import com.jay.domain.usecase.LocalUseCase
 import com.jay.wjshop.mapper.mapToDomain
-import com.jay.wjshop.model.Goods
-import com.jay.wjshop.model.Shop
-import com.jay.wjshop.model.ShopInfo
-import com.jay.wjshop.model.ShopSales
+import com.jay.wjshop.model.*
 import com.jay.wjshop.ui.base.WJBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,12 +27,18 @@ class ProductViewModel @Inject constructor(
     val product: LiveData<Shop>
         get() = _products
 
+    private val _salesList = MutableLiveData<List<ShopSalesModel>>()
+    val salesList: LiveData<List<ShopSalesModel>>
+        get() = _salesList
+
     init {
         registerRx()
     }
 
     fun setProducts(shop: Shop) {
         _products.value = shop
+
+        newShopSalesList(shop.salesList)
     }
 
     fun getProducts(): Shop? {
@@ -72,6 +75,19 @@ class ProductViewModel @Inject constructor(
             originalPrice = item.first.originalPrice,
             salePrice = item.first.salePrice
         ).mapToDomain()
+    }
+
+    private fun createShopSales(): ShopSalesButton {
+        return ShopSalesButton()
+    }
+
+    private fun newShopSalesList(salesList: List<ShopSales>) {
+        val newList = mutableListOf<ShopSalesModel>().apply {
+            addAll(salesList)
+            add(createShopSales())
+        }
+
+        _salesList.value = newList
     }
 
     private fun registerRx() {

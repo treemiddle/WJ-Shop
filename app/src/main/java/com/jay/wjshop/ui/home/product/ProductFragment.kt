@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.FragmentProductBinding
+import com.jay.wjshop.model.ShopSales
 import com.jay.wjshop.ui.home.WJHomeViewModel
 import com.jay.wjshop.utils.ext.shortToast
 import com.jay.wjshop.utils.getRecyclerAnimation
@@ -28,7 +29,9 @@ class ProductFragment : Fragment() {
     private val position by lazy { arguments?.getInt(FRAGMENT_POSITION) }
     private val adapter by lazy {
         ProductAdapter {
-            viewModel.onClickGoods(it to activityViewModel.getCurrentShop())
+            if (it is ShopSales) {
+                viewModel.onClickGoods(it to activityViewModel.getCurrentShop())
+            }
         }
     }
 
@@ -63,8 +66,8 @@ class ProductFragment : Fragment() {
 
     private fun setupObserver() {
         with(viewModel) {
-            product.observe(viewLifecycleOwner, {
-                adapter.submitList(it.salesList)
+            salesList.observe(viewLifecycleOwner, {
+                adapter.submitList(it)
             })
             toast.observe(viewLifecycleOwner, {
                 it.getContentIfNotHandled()?.let {
