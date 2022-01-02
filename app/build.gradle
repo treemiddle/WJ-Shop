@@ -52,6 +52,7 @@ dependencies {
     api deps.androidx.livedata_ktx
     api deps.androidx.viewmodel_ktx
     api deps.androidx.swipe_layout
+    api deps.androidx.shimmer_layout
 
     testApi deps.test.junit
     androidTestApi deps.test.runner

@@ -123,7 +123,7 @@ class WJHomeViewModel @Inject constructor(
         compositeDisposable.addAll(
             headerClickSubject.throttleFirst(750, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { changeShopFromRandom() },
+                .subscribe { changeShopFromRandom(); showToast(1) },
 
             localShopSubject.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
@@ -136,7 +136,7 @@ class WJHomeViewModel @Inject constructor(
 
             shopInfoSubject.distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { setShopInfo(it); showToast() }
+                .subscribe { setShopInfo(it) }
         )
     }
 

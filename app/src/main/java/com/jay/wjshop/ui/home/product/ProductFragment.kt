@@ -24,13 +24,10 @@ class ProductFragment : Fragment() {
     private val activityViewModel by activityViewModels<WJHomeViewModel>()
     private val viewModel by viewModels<ProductViewModel>()
 
-    //todo nestedScrollview tablayout viewpager layout 잡아야해...그 전에 비지니스부터하자...
-    //todo 레이아웃 잡고 로직 수정하면 끝
     private lateinit var binding: FragmentProductBinding
     private val position by lazy { arguments?.getInt(FRAGMENT_POSITION) }
     private val adapter by lazy {
         ProductAdapter {
-            context?.shortToast(String.format(requireContext().getString(R.string.selected_goods), it.name))
             viewModel.onClickGoods(it to activityViewModel.getCurrentShop())
         }
     }
@@ -68,6 +65,16 @@ class ProductFragment : Fragment() {
         with(viewModel) {
             product.observe(viewLifecycleOwner, {
                 adapter.submitList(it.salesList)
+            })
+            toast.observe(viewLifecycleOwner, {
+                it.getContentIfNotHandled()?.let {
+                    context?.shortToast(
+                        String.format(
+                            requireContext().getString(R.string.selected_goods),
+                            "${viewModel.getRecentlyGoods().first.name} 상품을 선택하셨습니다"
+                        )
+                    )
+                }
             })
         }
     }

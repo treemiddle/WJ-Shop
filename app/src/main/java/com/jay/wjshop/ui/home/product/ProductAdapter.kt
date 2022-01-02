@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.jay.wjshop.databinding.ItemProductBinding
+import com.jay.wjshop.databinding.ItemProductButtonBinding
 import com.jay.wjshop.model.ShopSales
 import com.jay.wjshop.ui.base.WJBaseListAdapter
 import com.jay.wjshop.ui.base.WJBaseViewHolder
@@ -53,6 +54,18 @@ class ProductAdapter(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    class ProductButtonItemHolder(
+        private val binding: ItemProductButtonBinding
+    ) : WJBaseViewHolder<ShopSales>(binding) {
+        override fun bind(item: ShopSales) {
+
+        }
+
+        override fun recycle() {
+
         }
     }
 }

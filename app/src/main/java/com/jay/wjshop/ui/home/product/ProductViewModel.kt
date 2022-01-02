@@ -46,7 +46,7 @@ class ProductViewModel @Inject constructor(
         item.second?.let { goodsAndShopInfoSubject.onNext(item.first to it) } ?: return
     }
 
-    private fun getRecentlyGoods() = goodsAndShopInfoSubject.value!!
+    fun getRecentlyGoods() = goodsAndShopInfoSubject.value!!
 
     private fun saveGoods() {
         localUseCase.insertGoods(createNewGoods())
@@ -77,8 +77,9 @@ class ProductViewModel @Inject constructor(
     private fun registerRx() {
         compositeDisposable.addAll(
             goodsAndShopInfoSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { saveGoods() }
+                .subscribe { saveGoods(); showToast(2) }
         )
     }
 

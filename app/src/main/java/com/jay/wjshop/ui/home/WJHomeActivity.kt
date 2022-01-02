@@ -1,6 +1,9 @@
 package com.jay.wjshop.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -10,7 +13,6 @@ import com.jay.wjshop.model.Shop
 import com.jay.wjshop.ui.base.BaseActivity
 import com.jay.wjshop.ui.home.product.ProductFragment
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
-import com.jay.wjshop.utils.EventObserver
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +22,6 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
     override val viewModel: WJHomeViewModel by viewModels()
     private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
     private val recentlyGoodsAdapter by lazy { RecentlyGoodsAdapter() }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,11 +45,13 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
                 recentlyGoodsAdapter.submitList(newList)
                 binding.rvRecently.smoothScrollToPosition(0)
             })
-            toast.observe(this@WJHomeActivity, EventObserver {
-                shortToast(
-                    "0에서 ${viewModel.getShopInfoList().lastIndex}까지 랜덤하게 뽑습니다." +
-                            "중복 값은 발행하지 않아요."
-                )
+            toast.observe(this@WJHomeActivity, {
+                it.getContentIfNotHandled()?.let {
+                    shortToast(
+                        "0에서 ${viewModel.getShopInfoList().lastIndex}까지 랜덤하게 뽑습니다." +
+                                "중복 값은 발행하지 않아요."
+                    )
+                }
             })
         }
     }

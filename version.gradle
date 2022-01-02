@@ -55,7 +55,9 @@ ext {
 
             room_version      : '2.4.0',
 
-            swipe_layout      : '1.1.0'
+            swipe_layout      : '1.1.0',
+
+            shimmer           : '0.5.0'
     ]
 
     deps = [
@@ -79,7 +81,8 @@ ext {
                     life_cycle_ktx  : "androidx.lifecycle:lifecycle-runtime-ktx:$versions.androidx.lifecycle",
                     livedata_ktx    : "androidx.lifecycle:lifecycle-livedata-ktx:$versions.androidx.lifecycle",
                     viewmodel_ktx   : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.androidx.lifecycle",
-                    swipe_layout    : "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipe_layout"
+                    swipe_layout    : "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipe_layout",
+                    shimmer_layout  : "com.facebook.shimmer:shimmer:$versions.shimmer"
             ],
 
             hilt     : [

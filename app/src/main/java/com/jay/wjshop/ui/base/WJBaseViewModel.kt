@@ -15,8 +15,9 @@ abstract class WJBaseViewModel : ViewModel() {
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    private val _toast = MutableLiveData<Event<Unit>>()
-    val toast: LiveData<Event<Unit>>
+    // test용
+    private val _toast = MutableLiveData<Event<Int>>()
+    val toast: LiveData<Event<Int>>
         get() = _toast
 
     protected fun showLoading() {
@@ -27,8 +28,8 @@ abstract class WJBaseViewModel : ViewModel() {
         _isLoading.value = false
     }
 
-    protected fun showToast() {
-        _toast.value = Event(Unit)
+    protected fun showToast(testInt: Int) {
+        _toast.value = Event(testInt)
     }
 
     protected fun addDisposable(disposable: Disposable) {
