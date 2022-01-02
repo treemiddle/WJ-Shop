@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.FragmentProductBinding
-import com.jay.wjshop.ui.home.WJViewModel
+import com.jay.wjshop.ui.home.WJHomeViewModel
 import com.jay.wjshop.utils.ext.shortToast
 import com.jay.wjshop.utils.getRecyclerAnimation
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProductFragment : Fragment() {
 
-    private val activityViewModel by activityViewModels<WJViewModel>()
+    private val activityViewModel by activityViewModels<WJHomeViewModel>()
     private val viewModel by viewModels<ProductViewModel>()
 
     //todo nestedScrollview tablayout viewpager layout 잡아야해...그 전에 비지니스부터하자...

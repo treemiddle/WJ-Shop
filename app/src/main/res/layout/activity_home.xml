@@ -9,7 +9,7 @@
 
         <variable
             name="vm"
-            type="com.jay.wjshop.ui.home.WJViewModel" />
+            type="com.jay.wjshop.ui.home.WJHomeViewModel" />
 
         <!--        <variable-->
         <!--            name="fragment_activity"-->

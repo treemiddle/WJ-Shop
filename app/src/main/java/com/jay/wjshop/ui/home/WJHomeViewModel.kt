@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class WJViewModel @Inject constructor(
+class WJHomeViewModel @Inject constructor(
     private val wjUseCase: WJUseCase,
     private val localUseCase: LocalUseCase
 ) : WJBaseViewModel() {
@@ -60,8 +60,8 @@ class WJViewModel @Inject constructor(
         get() = _recentlyGoodsList
 
     init {
-        registerRx()
-        getLocalShops()
+        //registerRx()
+        //getLocalShops()
     }
 
     fun onHeaderClick() = headerClickSubject.onNext(Unit)

@@ -2,13 +2,12 @@ package com.jay.wjshop.ui.home
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.jay.wjshop.R
-import com.jay.wjshop.databinding.ActivityWjBinding
+import com.jay.wjshop.databinding.ActivityHomeBinding
 import com.jay.wjshop.model.Shop
+import com.jay.wjshop.ui.base.BaseActivity
 import com.jay.wjshop.ui.home.product.ProductFragment
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 import com.jay.wjshop.utils.EventObserver
@@ -16,40 +15,36 @@ import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class WJActivity : AppCompatActivity() {
+class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home) {
 
-    private lateinit var binding: ActivityWjBinding
-    private val viewModel by viewModels<WJViewModel>()
+    override val viewModel: WJHomeViewModel by viewModels()
     private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
     private val recentlyGoodsAdapter by lazy { RecentlyGoodsAdapter() }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupBinding()
-        setupObserver()
         initRecentlyGoodsAdapter()
         initPagerAdapter()
         setupTabLayout()
     }
 
-    private fun setupBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_wj)
+    override fun setupBinding() {
         binding.vm = viewModel
-        binding.lifecycleOwner = this
     }
 
-    private fun setupObserver() {
+    override fun setupObserver() {
         with(viewModel) {
-            productList.observe(this@WJActivity, {
+            productList.observe(this@WJHomeActivity, {
                 it?.let { shops -> setTabAndPagers(shops) }
             })
-            recentlyGoodsList.observe(this@WJActivity, {
+            recentlyGoodsList.observe(this@WJHomeActivity, {
                 val newList = it.take(8)
                 recentlyGoodsAdapter.submitList(newList)
                 binding.rvRecently.smoothScrollToPosition(0)
             })
-            toast.observe(this@WJActivity, EventObserver {
+            toast.observe(this@WJHomeActivity, EventObserver {
                 shortToast(
                     "0에서 ${viewModel.getShopInfoList().lastIndex}까지 랜덤하게 뽑습니다." +
                             "중복 값은 발행하지 않아요."
