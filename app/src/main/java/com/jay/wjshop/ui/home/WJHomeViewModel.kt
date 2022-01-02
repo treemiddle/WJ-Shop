@@ -60,8 +60,8 @@ class WJHomeViewModel @Inject constructor(
         get() = _recentlyGoodsList
 
     init {
-        //registerRx()
-        //getLocalShops()
+        registerRx()
+        getLocalShops()
     }
 
     fun onHeaderClick() = headerClickSubject.onNext(Unit)

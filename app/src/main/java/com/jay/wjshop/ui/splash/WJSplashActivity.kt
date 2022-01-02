@@ -3,8 +3,9 @@ package com.jay.wjshop.ui.splash
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.viewModels
-import com.jay.common.makeLog
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivitySplashBinding
 import com.jay.wjshop.ui.base.BaseActivity
@@ -22,6 +23,10 @@ class WJSplashActivity : BaseActivity<ActivitySplashBinding, WJSplashViewModel>(
         super.onCreate(savedInstanceState)
 
         removeAnimation()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            startHome()
+        }, 1300)
     }
 
     override fun setupBinding() {
@@ -29,10 +34,9 @@ class WJSplashActivity : BaseActivity<ActivitySplashBinding, WJSplashViewModel>(
     }
 
     override fun setupObserver() {
-        viewModel.isFlag.observe(this, {
-            makeLog(javaClass.simpleName, "넘어가자~~~~~")
-            startHome()
-        })
+        with(viewModel) {
+
+        }
     }
 
     private fun startHome() {
