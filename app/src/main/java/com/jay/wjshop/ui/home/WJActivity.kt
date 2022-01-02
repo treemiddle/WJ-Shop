@@ -1,8 +1,8 @@
 package com.jay.wjshop.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -11,6 +11,7 @@ import com.jay.wjshop.databinding.ActivityWjBinding
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.ui.home.product.ProductFragment
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
+import com.jay.wjshop.utils.EventObserver
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,26 +41,28 @@ class WJActivity : AppCompatActivity() {
 
     private fun setupObserver() {
         with(viewModel) {
-            goodsList.observe(this@WJActivity, {
-                it?.let { shops ->
-//                    removeAll()
-//                    addFragment(shops)
-//                    setupPagerAdapter(shops)
-                    removeTabItem()
-                    removeFragment()
-                    addTabItem(shops)
-                    addFragment(shops)
-                }
+            productList.observe(this@WJActivity, {
+                it?.let { shops -> setTabAndPagers(shops) }
             })
             recentlyGoodsList.observe(this@WJActivity, {
                 val newList = it.take(8)
                 recentlyGoodsAdapter.submitList(newList)
                 binding.rvRecently.smoothScrollToPosition(0)
             })
-            toast.observe(this@WJActivity, {
-                shortToast(it)
+            toast.observe(this@WJActivity, EventObserver {
+                shortToast(
+                    "0에서 ${viewModel.getShopInfoList().lastIndex}까지 랜덤하게 뽑습니다." +
+                            "중복 값은 발행하지 않아요."
+                )
             })
         }
+    }
+
+    private fun setTabAndPagers(shops: List<Shop>) {
+        removeTabItem()
+        removeFragment()
+        addTabItem(shops)
+        addFragment(shops)
     }
 
     private fun initPagerAdapter() {
@@ -86,6 +89,8 @@ class WJActivity : AppCompatActivity() {
             val tab = binding.tabLayout.newTab().setText(shops[i].category)
             binding.tabLayout.addTab(tab)
         }
+
+        moveToFirstTab()
     }
 
     private fun removeTabItem() {
@@ -94,12 +99,21 @@ class WJActivity : AppCompatActivity() {
         }
     }
 
+    private fun moveToFirstTab() {
+        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0))
+    }
+
+    private fun moveToFirstPager() {
+        binding.viewPager.currentItem = 0
+    }
+
+
     private fun addFragment(shops: List<Shop>) {
         shops.forEachIndexed { index, _ ->
-            viewPagerAdapter.add(
-                ProductFragment.newInstance(index)
-            )
+            viewPagerAdapter.add(ProductFragment.newInstance(index))
         }
+
+        moveToFirstPager()
     }
 
     private fun removeFragment() {
@@ -111,27 +125,5 @@ class WJActivity : AppCompatActivity() {
     private fun initRecentlyGoodsAdapter() {
         binding.rvRecently.adapter = recentlyGoodsAdapter
     }
-
-//    private fun setupPagerAdapter(shops: List<Shop>) {
-//        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-//            tab.text = shops[position].category
-//        }.attach()
-//    }
-//
-//    private fun addFragment(shops: List<Shop>) {
-//        shops.forEachIndexed { index, _ ->
-//            viewPagerAdapter.add(CategoryFragment.newInstance(index))
-//        }
-//    }
-//
-//    private fun removeAll() {
-//        val fragmentCount = viewPagerAdapter.itemCount
-//        val tabCount = binding.tabLayout.tabCount
-//
-//        if (fragmentCount != 0 || tabCount != 0) {
-//            viewPagerAdapter.clear()
-//            binding.tabLayout.removeAllTabs()
-//        }
-//    }
 
 }

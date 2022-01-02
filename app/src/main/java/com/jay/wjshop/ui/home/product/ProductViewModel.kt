@@ -24,7 +24,7 @@ class ProductViewModel @Inject constructor(
     private val localUseCase: LocalUseCase
 ) : WJBaseViewModel() {
 
-    private val onGoodsClickSubject = BehaviorSubject.create<Pair<ShopSales, ShopInfo>>()
+    private val goodsAndShopInfoSubject = BehaviorSubject.create<Pair<ShopSales, ShopInfo>>()
 
     private val _products = MutableLiveData<Shop>()
     val product: LiveData<Shop>
@@ -43,19 +43,19 @@ class ProductViewModel @Inject constructor(
     }
 
     fun onClickGoods(item: Pair<ShopSales, ShopInfo?>) {
-        item.second?.let { onGoodsClickSubject.onNext(item.first to it) } ?: return
+        item.second?.let { goodsAndShopInfoSubject.onNext(item.first to it) } ?: return
     }
 
-    private fun getRecentlyGoods() = onGoodsClickSubject.value!!
+    private fun getRecentlyGoods() = goodsAndShopInfoSubject.value!!
 
     private fun saveGoods() {
         localUseCase.insertGoods(createNewGoods())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                makeLog(javaClass.simpleName, "save goods success")
+                makeLog(javaClass.simpleName, "saveGoods success")
             }, {
-                makeLog(javaClass.simpleName, "save goods fail: ${it.localizedMessage}")
+                makeLog(javaClass.simpleName, "saveGoods fail: ${it.localizedMessage}")
             }).addTo(compositeDisposable)
     }
 
@@ -76,7 +76,7 @@ class ProductViewModel @Inject constructor(
 
     private fun registerRx() {
         compositeDisposable.addAll(
-            onGoodsClickSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
+            goodsAndShopInfoSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { saveGoods() }
         )

@@ -7,14 +7,12 @@ import com.jay.domain.usecase.LocalUseCase
 import com.jay.domain.usecase.WJUseCase
 import com.jay.wjshop.mapper.ShopInfoMapper
 import com.jay.wjshop.mapper.ShopInfoMapper.mapToDomain
+import com.jay.wjshop.mapper.ShopMapper
 import com.jay.wjshop.mapper.mapToPresentation
 import com.jay.wjshop.model.Goods
 import com.jay.wjshop.model.Shop
-import com.jay.wjshop.model.ShopAndGoods
 import com.jay.wjshop.model.ShopInfo
 import com.jay.wjshop.ui.base.WJBaseViewModel
-import com.jay.wjshop.utils.dummyGoods1
-import com.jay.wjshop.utils.dummyGoods2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -33,7 +31,9 @@ class WJViewModel @Inject constructor(
 
     private val headerClickSubject = PublishSubject.create<Unit>()
     private val localShopSubject = BehaviorSubject.create<List<ShopInfo>>()
-    private var disposable: Disposable? = null
+    private val shopInfoSubject = BehaviorSubject.create<ShopInfo>()
+    private var shopAndGoodsdisposable: Disposable? = null
+    private var productDisposable: Disposable? = null
 
     private val _headerShopName = MutableLiveData<String?>()
     val headerShopName: LiveData<String?>
@@ -43,13 +43,13 @@ class WJViewModel @Inject constructor(
     val headerType: LiveData<String?>
         get() = _headerType
 
-    private val _shopList = MutableLiveData<List<ShopInfo>>()
-    val shopList: LiveData<List<ShopInfo>>
-        get() = _shopList
+    private val _shopInfoList = MutableLiveData<List<ShopInfo>>()
+    val shopInfoList: LiveData<List<ShopInfo>>
+        get() = _shopInfoList
 
-    private val _goodsList = MutableLiveData<List<Shop>?>()
-    val goodsList: LiveData<List<Shop>?>
-        get() = _goodsList
+    private val _productList = MutableLiveData<List<Shop>?>()
+    val productList: LiveData<List<Shop>?>
+        get() = _productList
 
     private val _currentShop = MutableLiveData<ShopInfo>()
     val currentShop: LiveData<ShopInfo>
@@ -59,79 +59,84 @@ class WJViewModel @Inject constructor(
     val recentlyGoodsList: LiveData<List<Goods>>
         get() = _recentlyGoodsList
 
-    // mutalbelivedata 바꿔 테스트용임 지금
-    private val _toast = MutableLiveData<String>()
-    val toast: LiveData<String>
-        get() = _toast
-
     init {
         registerRx()
         getLocalShops()
-        deleteShopAndGoods()
     }
 
     fun onHeaderClick() = headerClickSubject.onNext(Unit)
 
-    private fun localShopList(shops: List<ShopInfo>) = localShopSubject.onNext(shops)
-
-    private fun setShopList(shopInfos: List<ShopInfo>) {
-        _shopList.value = shopInfos
-
-        setHeaderData()
-    }
-
-    private fun getShopList(): List<ShopInfo> {
-        return _shopList.value ?: emptyList()
-    }
-
-    fun getGoodsList(): List<Shop> {
-        return _goodsList.value ?: emptyList()
+    fun getProductList(): List<Shop> {
+        return _productList.value ?: emptyList()
     }
 
     fun getCurrentShop(): ShopInfo? {
         return _currentShop.value
     }
 
-    private fun setHeaderData() {
-        val shop = getShopList().first()
-
-        _currentShop.value = shop
-        _headerShopName.value = shop.name
-        _headerType.value = shop.type
-        getGoods(shop.id)
-        getShopAndGoods(shop.id)
+    fun getShopInfoList(): List<ShopInfo> {
+        return _shopInfoList.value ?: emptyList()
     }
 
-    private fun changeHeaderShopName() {
-        if (getShopList().isEmpty()) return
+    private fun localShopList(shops: List<ShopInfo>) = localShopSubject.onNext(shops)
 
-        val random = (0..getShopList().lastIndex).random()
-        val shop = getShopList()[random]
+    private fun setShopInfoSubject(shopInfo: ShopInfo) = shopInfoSubject.onNext(shopInfo)
 
-        _toast.value = "0에서 ${getShopList().lastIndex}까지 랜덤하게 이름 뽑아요~"
-        _currentShop.value = shop
-        _headerShopName.value = shop.name
-        _headerType.value = shop.type
+    private fun setShopInfoList(shopInfoList: List<ShopInfo>) {
+        _shopInfoList.value = shopInfoList
 
-        updateShop(shop)
-        getGoods(shop.id)
-        getShopAndGoods(shop.id)
+        setHeaderData()
+    }
+
+    private fun setCurrentShopInfo(shopInfo: ShopInfo) {
+        _currentShop.value = shopInfo
+        _headerShopName.value = shopInfo.name
+        _headerType.value = shopInfo.type
+    }
+
+    private fun setHeaderData() {
+        val shopInfo = getShopInfoList().first()
+
+        setShopInfoSubject(shopInfo)
+        setCurrentShopInfo(shopInfo)
+        getProducts(shopInfo.id)
+        getShopAndGoods(shopInfo.id)
+    }
+
+    private fun changeShopFromRandom() {
+        if (getShopInfoList().isEmpty()) return
+
+        val random = (0..getShopInfoList().lastIndex).random()
+        val shopInfo = getShopInfoList()[random]
+
+        setShopInfoSubject(shopInfo)
+    }
+
+    private fun setShopInfo(shopInfo: ShopInfo) {
+        setCurrentShopInfo(shopInfo)
+        updateShopInfo(shopInfo)
+        getProducts(shopInfo.id)
+        getShopAndGoods(shopInfo.id)
     }
 
     private fun registerRx() {
         compositeDisposable.addAll(
             headerClickSubject.throttleFirst(750, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { changeHeaderShopName() },
+                .subscribe { changeShopFromRandom() },
 
             localShopSubject.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     if (it.isNotEmpty()) {
-                        setShopList(it)
+                        setShopInfoList(it)
                     } else {
                         getShops()
                     }
-                }
+                },
+
+            shopInfoSubject.distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { setShopInfo(it); showToast() }
         )
     }
 
@@ -143,72 +148,66 @@ class WJViewModel @Inject constructor(
             .doOnSubscribe { showLoading() }
             .doAfterSuccess { hideLoading() }
             .subscribe({
-                makeLog(javaClass.simpleName, "$it")
-                setShopList(it)
+                setShopInfoList(it)
             }, { t ->
-                makeLog(javaClass.simpleName, "shop info error: ${t.localizedMessage}")
+                makeLog(javaClass.simpleName, "getShops error: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
     }
 
-    // 선택된 샵의 따라 굿즈리스트를 가져옴
-    private fun getGoods(shopId: Int) {
-        if (shopId == 1) {
-            _goodsList.value = dummyGoods1()
-        } else {
-            _goodsList.value = dummyGoods2()
-        }
-//        disposable?.let {
-//            if (!it.isDisposed) {
-//                it.dispose()
-//            }
+    private fun getProducts(shopId: Int) {
+//        if (shopId == 1) {
+//            _productList.value = dummyGoods1()
+//        } else {
+//            _productList.value = dummyGoods2()
 //        }
-//
-//        disposable = wjUseCase.getGoods(shopId)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .map(ShopMapper::mapToPresentation)
-//            .subscribe({
-//                makeLog(javaClass.simpleName, "들어옴 remote ${it.size}")
-//                _goodsList.value = it
-//            }, { t ->
-//                makeLog(javaClass.simpleName, "shop error: ${t.localizedMessage}")
-//            }).addTo(compositeDisposable)
+        productDisposable?.let {
+            if (!it.isDisposed) {
+                it.dispose()
+            }
+        }
+
+        productDisposable = wjUseCase.getGoods(shopId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(ShopMapper::mapToPresentation)
+            .subscribe({
+                _productList.value = it
+            }, { t ->
+                makeLog(javaClass.simpleName, "getGoods error: ${t.localizedMessage}")
+            }).addTo(compositeDisposable)
     }
 
-    // 선택된 샵을 로컬에 저장
-    private fun updateShop(shop: ShopInfo) {
+    private fun updateShopInfo(shop: ShopInfo) {
         localUseCase.updateShop(shop.mapToDomain())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                makeLog(javaClass.simpleName, "shop insert success")
+                makeLog(javaClass.simpleName, "updateShopInfo success")
             }, { t ->
                 makeLog(javaClass.simpleName, "shop insert error: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
     }
 
-    // 로컬에 있는 shop 정보를 가져옴
     private fun getLocalShops() {
         localUseCase.getShops()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map(ShopInfoMapper::mapToPresentation)
             .subscribe({
-                makeLog(javaClass.simpleName, "local shops: $it")
                 localShopList(it)
             }, { t ->
-                makeLog(javaClass.simpleName, "local shops error: ${t.localizedMessage}")
+                makeLog(javaClass.simpleName, "getLocalShops error: ${t.localizedMessage}")
                 localShopList(emptyList())
             }).addTo(compositeDisposable)
     }
 
     private fun getShopAndGoods(shopId: Int) {
-        disposable?.let {
+        shopAndGoodsdisposable?.let {
             if (!it.isDisposed) {
                 it.dispose()
             }
         }
 
-        disposable = localUseCase.getGoodsByShopId(shopId)
+        shopAndGoodsdisposable = localUseCase.getGoodsByShopId(shopId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { showLoading() }
@@ -216,10 +215,7 @@ class WJViewModel @Inject constructor(
             .map { it.mapToPresentation() }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { hideLoading() }
-            .subscribe {
-                setRecentlyGoodsList(it.goodsList)
-                makeLog(javaClass.simpleName, "size: ${it.goodsList.size}, shopdId: ${it.shop.id}")
-            }
+            .subscribe { setRecentlyGoodsList(it.goodsList) }
             .addTo(compositeDisposable)
     }
 
@@ -229,16 +225,16 @@ class WJViewModel @Inject constructor(
 
     /**
      * [테스트용]
-     * 로컬에 상품을 지움(선택한 상품들)
+     * 로컬에 저장된 상품을 전부 지움(선택한 굿즈)
      */
     private fun deleteShopAndGoods() {
         localUseCase.clearGoods()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                makeLog(javaClass.simpleName, "goods delete success")
-            }, {
-                makeLog(javaClass.simpleName, "goods delete fail: ${it.localizedMessage}")
+                makeLog(javaClass.simpleName, "deleteShopAndGoods success")
+            }, { t ->
+                makeLog(javaClass.simpleName, "deleteShopAndGoods fail: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
     }
 
@@ -251,9 +247,9 @@ class WJViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                makeLog(javaClass.simpleName, "shop delete all success")
+                makeLog(javaClass.simpleName, "deleteAllShops success")
             }, { t ->
-                makeLog(javaClass.simpleName, "shop delete all error: ${t.localizedMessage}")
+                makeLog(javaClass.simpleName, "deleteAllShops error: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
     }
 

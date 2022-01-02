@@ -15,12 +15,20 @@ abstract class WJBaseViewModel : ViewModel() {
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    private val _toast = MutableLiveData<Event<Unit>>()
+    val toast: LiveData<Event<Unit>>
+        get() = _toast
+
     protected fun showLoading() {
         _isLoading.value = true
     }
 
     protected fun hideLoading() {
         _isLoading.value = false
+    }
+
+    protected fun showToast() {
+        _toast.value = Event(Unit)
     }
 
     protected fun addDisposable(disposable: Disposable) {

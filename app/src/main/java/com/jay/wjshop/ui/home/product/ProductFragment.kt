@@ -25,7 +25,7 @@ class ProductFragment : Fragment() {
     private val viewModel by viewModels<ProductViewModel>()
 
     //todo nestedScrollview tablayout viewpager layout 잡아야해...그 전에 비지니스부터하자...
-    //todo 스와이프 시 (2번쨰 포지션에서 샵 바꾸면 위치가 달라져있음)
+    //todo 레이아웃 잡고 로직 수정하면 끝
     private lateinit var binding: FragmentProductBinding
     private val position by lazy { arguments?.getInt(FRAGMENT_POSITION) }
     private val adapter by lazy {
@@ -61,7 +61,7 @@ class ProductFragment : Fragment() {
     private fun setupBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        position?.let { viewModel.setProducts(activityViewModel.getGoodsList()[it]) }
+        position?.let { viewModel.setProducts(activityViewModel.getProductList()[it]) }
     }
 
     private fun setupObserver() {

@@ -1,5 +1,23 @@
 package com.jay.wjshop.utils.bindingadapter
 
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import com.jay.wjshop.model.ShopInfo
+
+@BindingAdapter("setCurrentShopName")
+fun bindCurrentShopName(tv: TextView, shopInfo: ShopInfo?) {
+    shopInfo ?: return
+
+    //tv.text =
+}
+
+@BindingAdapter("setCurrentHeaderType")
+fun bindCurrentHeaderType(tv: TextView, shopInfo: ShopInfo?) {
+    shopInfo ?: return
+
+    //tv.text = type
+}
+
 //@BindingAdapter("setShopCategory", "setViewModel")
 //fun bindTabLayout(
 //    tabLayout: TabLayout,
