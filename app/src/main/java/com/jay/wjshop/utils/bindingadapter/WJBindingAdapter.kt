@@ -1,22 +1,14 @@
 package com.jay.wjshop.utils.bindingadapter
 
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.jay.common.makeLog
+import com.jay.wjshop.model.Goods
 import com.jay.wjshop.model.ShopInfo
-
-@BindingAdapter("setCurrentShopName")
-fun bindCurrentShopName(tv: TextView, shopInfo: ShopInfo?) {
-    shopInfo ?: return
-
-    //tv.text =
-}
-
-@BindingAdapter("setCurrentHeaderType")
-fun bindCurrentHeaderType(tv: TextView, shopInfo: ShopInfo?) {
-    shopInfo ?: return
-
-    //tv.text = type
-}
+import org.w3c.dom.Text
 
 //@BindingAdapter("setShopCategory", "setViewModel")
 //fun bindTabLayout(

@@ -7,17 +7,22 @@
 
         <import type="android.view.View" />
 
+        <import type="java.util.List"/>
+
         <variable
             name="vm"
             type="com.jay.wjshop.ui.home.WJHomeViewModel" />
 
+        <variable
+            name="goods_list"
+            type="List&lt;com.jay.wjshop.model.Goods>" />
         <!--        <variable-->
         <!--            name="fragment_activity"-->
         <!--            type="androidx.fragment.app.FragmentActivity" />-->
     </data>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/coordinator"
+        android:id="@+id/nsv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -109,28 +114,36 @@
                 android:layout_height="400dp"
                 android:overScrollMode="never" />
 
-            <TextView
-                android:id="@+id/tv_current_product"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="40dp"
-                android:text="@string/txt_recently_goods"
-                android:textSize="24dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ctl_header" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_recently"
+            <LinearLayout
+                android:id="@+id/ll_recently"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="8"
-                tools:listitem="@layout/item_goods" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_current_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="40dp"
+                    android:text="@string/txt_recently_goods"
+                    android:textSize="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ctl_header" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recently"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="8"
+                    tools:listitem="@layout/item_goods" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -155,11 +155,6 @@ class WJHomeViewModel @Inject constructor(
     }
 
     private fun getProducts(shopId: Int) {
-//        if (shopId == 1) {
-//            _productList.value = dummyGoods1()
-//        } else {
-//            _productList.value = dummyGoods2()
-//        }
         productDisposable?.let {
             if (!it.isDisposed) {
                 it.dispose()

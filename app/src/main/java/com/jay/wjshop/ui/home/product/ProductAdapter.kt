@@ -56,7 +56,7 @@ class ProductAdapter(
         } else {
             val layoutParams = StaggeredGridLayoutManager.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 isFullSpan = true
             }

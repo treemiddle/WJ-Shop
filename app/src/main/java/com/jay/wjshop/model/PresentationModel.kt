@@ -1,7 +1,5 @@
 package com.jay.wjshop.model
 
-import com.jay.common.ProductType
-
 data class ShopInfo(
     val id: Int = 0,
     val imageUrl: String = "",

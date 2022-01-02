@@ -8,4 +8,8 @@
     <string name="txt_recently_goods">최근 본 상품</string>
     <string name="selected_goods">%s 상품을 선택하셨습니다.</string>
     <string name="about_me">안녕하세요\n안드로이드 개발자 남우중입니다</string>
+    
+    <string name="skills">
+        Skills\nKotlin, MVVM, Clean architecture, Multi Module, Retrofit, Hilt, Glide, Room, Rx, Data Binding
+    </string>
 </resources>

@@ -26,7 +26,7 @@ class WJSplashActivity : BaseActivity<ActivitySplashBinding, WJSplashViewModel>(
 
         Handler(Looper.getMainLooper()).postDelayed({
             startHome()
-        }, 1300)
+        }, 2500)
     }
 
     override fun setupBinding() {

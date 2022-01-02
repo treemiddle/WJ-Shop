@@ -19,6 +19,10 @@ import com.jay.wjshop.utils.ext.shortToast
 import com.jay.wjshop.utils.getRecyclerAnimation
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * [ProductFragment]
+ * 선언형식이 아닌 펑션들 다 바인딩으로 뺴야함
+ */
 @AndroidEntryPoint
 class ProductFragment : Fragment() {
 
@@ -67,7 +71,11 @@ class ProductFragment : Fragment() {
     private fun setupObserver() {
         with(viewModel) {
             salesList.observe(viewLifecycleOwner, {
-                adapter.submitList(it)
+                if (it.isNotEmpty()) {
+                    adapter.submitList(it)
+                } else {
+                    adapter.submitList(null)
+                }
             })
             toast.observe(viewLifecycleOwner, {
                 it.getContentIfNotHandled()?.let {
@@ -93,6 +101,7 @@ class ProductFragment : Fragment() {
                 state: RecyclerView.State
             ) {
                 super.getItemOffsets(outRect, view, parent, state)
+
                 outRect.top = 10
                 outRect.bottom = 10
                 outRect.left = 10

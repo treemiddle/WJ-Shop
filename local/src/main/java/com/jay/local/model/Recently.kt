@@ -15,8 +15,8 @@ data class ShopAndGoodsEntity(
 @Entity(tableName = "goods")
 data class GoodsEntity(
     val shopId: Int,
-    @PrimaryKey(autoGenerate = false)
     val id: Int,
+    @PrimaryKey(autoGenerate = false)
     val name: String,
     val imageUrl: String,
     val isPreOrder: Boolean,
