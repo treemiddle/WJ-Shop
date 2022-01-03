@@ -50,20 +50,20 @@ class ProductAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: WJBaseViewHolder<ShopSalesModel>, position: Int) {
-        if (holder is ProductItemHolder) {
-            holder.bind(currentList[position])
-        } else {
-            val layoutParams = StaggeredGridLayoutManager.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply {
-                isFullSpan = true
-            }
-
-            holder.itemView.layoutParams = layoutParams
-        }
-    }
+//    override fun onBindViewHolder(holder: WJBaseViewHolder<ShopSalesModel>, position: Int) {
+//        if (holder is ProductItemHolder) {
+//            holder.bind(currentList[position])
+//        } else {
+//            val layoutParams = StaggeredGridLayoutManager.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            ).apply {
+//                isFullSpan = true
+//            }
+//
+//            holder.itemView.layoutParams = layoutParams
+//        }
+//    }
 
     override fun getItemViewType(position: Int) = when (currentList[position]) {
         is ShopSales -> MAIN
@@ -110,7 +110,7 @@ class ProductAdapter(
     }
 
     companion object {
-        private const val MAIN = 0
-        private const val BUTTON = 1
+        const val MAIN = 0
+        const val BUTTON = 1
     }
 }

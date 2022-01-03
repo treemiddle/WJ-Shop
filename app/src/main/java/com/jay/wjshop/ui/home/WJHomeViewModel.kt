@@ -98,9 +98,9 @@ class WJHomeViewModel @Inject constructor(
         val shopInfo = getShopInfoList().first()
 
         setShopInfoSubject(shopInfo)
-        setCurrentShopInfo(shopInfo)
         getProducts(shopInfo.id)
         getShopAndGoods(shopInfo.id)
+        setCurrentShopInfo(shopInfo)
     }
 
     private fun changeShopFromRandom() {
@@ -113,10 +113,10 @@ class WJHomeViewModel @Inject constructor(
     }
 
     private fun setShopInfo(shopInfo: ShopInfo) {
-        setCurrentShopInfo(shopInfo)
         updateShopInfo(shopInfo)
         getProducts(shopInfo.id)
         getShopAndGoods(shopInfo.id)
+        setCurrentShopInfo(shopInfo)
     }
 
     private fun registerRx() {
@@ -126,7 +126,10 @@ class WJHomeViewModel @Inject constructor(
                 .subscribe { changeShopFromRandom(); showToast(1) },
 
             localShopSubject.observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { showLoading() }
+                .doAfterTerminate { hideLoading() }
                 .subscribe {
+                    makeLog(javaClass.simpleName, "okokokoko: $it")
                     if (it.isNotEmpty()) {
                         setShopInfoList(it)
                     } else {
@@ -165,6 +168,7 @@ class WJHomeViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .map(ShopMapper::mapToPresentation)
             .subscribe({
+                makeLog(javaClass.simpleName, "okokokok shop: $it")
                 _productList.value = it
             }, { t ->
                 makeLog(javaClass.simpleName, "getGoods error: ${t.localizedMessage}")
@@ -188,6 +192,7 @@ class WJHomeViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .map(ShopInfoMapper::mapToPresentation)
             .subscribe({
+                makeLog(javaClass.simpleName, "get in!!: $it")
                 localShopList(it)
             }, { t ->
                 makeLog(javaClass.simpleName, "getLocalShops error: ${t.localizedMessage}")

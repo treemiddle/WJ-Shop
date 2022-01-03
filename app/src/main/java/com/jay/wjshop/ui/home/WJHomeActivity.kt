@@ -1,8 +1,14 @@
 package com.jay.wjshop.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.jay.common.makeLog
@@ -30,6 +36,7 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        loadingShimmer(true)
         initRecentlyGoodsAdapter()
         initPagerAdapter()
         setupTabLayout()
@@ -67,14 +74,36 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         removeFragment()
         addTabItem(shops)
         addFragment(shops)
+        setContentView(true)
+        loadingShimmer(false)
     }
 
     private fun initPagerAdapter() = with(binding) {
         viewPager.adapter = viewPagerAdapter
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                tabLayout.selectTab(tabLayout.getTabAt(position))
-                nsv.smoothScrollTo(0, 0)
+                super.onPageSelected(position)
+                try {
+                    val view = (viewPager.getChildAt(0) as RecyclerView).layoutManager?.findViewByPosition(position)
+
+                    view?.let {
+                        val width = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+                        val height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                        it.measure(width, height)
+
+                        if (viewPager.layoutParams.height != view.measuredHeight) {
+                            viewPager.layoutParams = (viewPager.layoutParams).also { lp ->
+                                lp.height = view.measuredHeight
+                            }
+                        }
+                    }
+
+                    tabLayout.selectTab(tabLayout.getTabAt(position))
+                    nsv.smoothScrollTo(0, 0)
+                } catch (e: Exception) {
+                    makeLog(javaClass.simpleName, "onPageSelected: ${e.localizedMessage}")
+                    e.printStackTrace()
+                }
             }
         })
     }
@@ -137,13 +166,11 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
 
     private fun showRecentlyGoods(state: Boolean, goodsList: List<Goods>? = null) {
         if (state) {
-            binding.llRecently.visibility = View.VISIBLE
             binding.tvCurrentProduct.visibility = View.VISIBLE
             binding.rvRecently.visibility = View.VISIBLE
             setRecentlyGoodsList(goodsList)
         } else {
             recentlyGoodsAdapter.submitList(null)
-            binding.llRecently.visibility = View.GONE
             binding.tvCurrentProduct.visibility = View.GONE
             binding.rvRecently.visibility = View.GONE
         }
@@ -155,6 +182,18 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
             recentlyGoodsAdapter.submitList(newList)
             binding.rvRecently.smoothScrollToPosition(0)
         }
+    }
+
+    private fun loadingShimmer(result: Boolean) = if (result) {
+        binding.flShimmer.visibility = View.VISIBLE
+    } else {
+        binding.flShimmer.visibility = View.GONE
+    }
+
+    private fun setContentView(result: Boolean) = if (result) {
+        binding.cdlContent.visibility = View.VISIBLE
+    } else {
+        binding.cdlContent.visibility = View.INVISIBLE
     }
 
 }

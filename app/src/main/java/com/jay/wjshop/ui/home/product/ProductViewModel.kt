@@ -92,7 +92,7 @@ class ProductViewModel @Inject constructor(
 
     private fun registerRx() {
         compositeDisposable.addAll(
-            goodsAndShopInfoSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
+            goodsAndShopInfoSubject.throttleFirst(200, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { saveGoods(); showToast(2) }
