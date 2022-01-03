@@ -70,8 +70,11 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         removeFragment()
         addTabItem(shops)
         addFragment(shops)
-        setContentView(true)
-        loadingShimmer(false)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            setContentView(true)
+            loadingShimmer(false)
+        }, 5000)
     }
 
     private fun initPagerAdapter() = with(binding) {
@@ -142,13 +145,11 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
 
     private fun showRecentlyGoods(state: Boolean, goodsList: List<Goods>? = null) {
         if (state) {
-            binding.llRecently.visibility = View.VISIBLE
             binding.tvCurrentProduct.visibility = View.VISIBLE
             binding.rvRecently.visibility = View.VISIBLE
             setRecentlyGoodsList(goodsList)
         } else {
             recentlyGoodsAdapter.submitList(null)
-            binding.llRecently.visibility = View.GONE
             binding.tvCurrentProduct.visibility = View.GONE
             binding.rvRecently.visibility = View.GONE
         }
@@ -169,9 +170,9 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
     }
 
     private fun setContentView(result: Boolean) = if (result) {
-        binding.llContent.visibility = View.VISIBLE
+        binding.cdlContent.visibility = View.VISIBLE
     } else {
-        binding.llContent.visibility = View.INVISIBLE
+        binding.cdlContent.visibility = View.INVISIBLE
     }
 
 }

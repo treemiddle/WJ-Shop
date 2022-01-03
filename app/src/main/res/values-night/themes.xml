@@ -21,4 +21,10 @@
     <style name="SplashTheme" parent="ColdStartTheme">
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="Theme.WJShop">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
+
 </resources>
