@@ -82,7 +82,7 @@ class ProductFragment : Fragment() {
                     context?.shortToast(
                         String.format(
                             requireContext().getString(R.string.selected_goods),
-                            "${viewModel.getRecentlyGoods().first.name} 상품을 선택하셨습니다"
+                            "${viewModel.getRecentlyGoods().first.name}"
                         )
                     )
                 }

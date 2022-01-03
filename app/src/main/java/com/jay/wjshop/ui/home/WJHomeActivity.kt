@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.jay.common.makeLog
@@ -81,8 +85,28 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         viewPager.adapter = viewPagerAdapter
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                tabLayout.selectTab(tabLayout.getTabAt(position))
-                nsv.smoothScrollTo(0, 0)
+                super.onPageSelected(position)
+                try {
+                    val view = (viewPager.getChildAt(0) as RecyclerView).layoutManager?.findViewByPosition(position)
+
+                    view?.let {
+                        val width = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+                        val height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                        it.measure(width, height)
+
+                        if (viewPager.layoutParams.height != view.measuredHeight) {
+                            viewPager.layoutParams = (viewPager.layoutParams).also { lp ->
+                                lp.height = view.measuredHeight
+                            }
+                        }
+                    }
+
+                    tabLayout.selectTab(tabLayout.getTabAt(position))
+                    nsv.smoothScrollTo(0, 0)
+                } catch (e: Exception) {
+                    makeLog(javaClass.simpleName, "onPageSelected: ${e.localizedMessage}")
+                    e.printStackTrace()
+                }
             }
         })
     }
