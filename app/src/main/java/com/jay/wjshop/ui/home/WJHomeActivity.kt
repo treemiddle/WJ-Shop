@@ -1,6 +1,8 @@
 package com.jay.wjshop.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -30,6 +32,7 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        loadingShimmer(true)
         initRecentlyGoodsAdapter()
         initPagerAdapter()
         setupTabLayout()
@@ -67,6 +70,8 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         removeFragment()
         addTabItem(shops)
         addFragment(shops)
+        setContentView(true)
+        loadingShimmer(false)
     }
 
     private fun initPagerAdapter() = with(binding) {
@@ -155,6 +160,18 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
             recentlyGoodsAdapter.submitList(newList)
             binding.rvRecently.smoothScrollToPosition(0)
         }
+    }
+
+    private fun loadingShimmer(result: Boolean) = if (result) {
+        binding.flShimmer.visibility = View.VISIBLE
+    } else {
+        binding.flShimmer.visibility = View.GONE
+    }
+
+    private fun setContentView(result: Boolean) = if (result) {
+        binding.llContent.visibility = View.VISIBLE
+    } else {
+        binding.llContent.visibility = View.INVISIBLE
     }
 
 }

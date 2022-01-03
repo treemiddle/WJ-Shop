@@ -21,6 +21,9 @@
         <entry key="app/src/main/res/layout/item_product.xml" value="0.23777173913043478" />
         <entry key="app/src/main/res/layout/item_product_button.xml" value="0.18262411347517732" />
         <entry key="app/src/main/res/layout/item_recently_goods.xml" value="0.18262411347517732" />
+        <entry key="app/src/main/res/layout/shimmer_item.xml" value="0.20364583333333333" />
+        <entry key="app/src/main/res/layout/shimmer_item_header.xml" value="0.20364583333333333" />
+        <entry key="app/src/main/res/layout/shimmer_tab.xml" value="0.3640625" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.275" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.275" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_wj_app.xml" value="0.3138888888888889" />
