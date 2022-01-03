@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.FragmentProductBinding
@@ -18,6 +19,7 @@ import com.jay.wjshop.ui.home.WJHomeViewModel
 import com.jay.wjshop.utils.ext.shortToast
 import com.jay.wjshop.utils.getRecyclerAnimation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.jvm.internal.MagicApiIntrinsics
 
 /**
  * [ProductFragment]
@@ -93,6 +95,16 @@ class ProductFragment : Fragment() {
     private fun initAdapter() {
         binding.rvGoods.adapter = adapter
         binding.rvGoods.animation = getRecyclerAnimation(context)
+        val gridLayoutManager = GridLayoutManager(context, 2)
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (adapter.getItemViewType(position)) {
+                    ProductAdapter.MAIN -> 1
+                    else -> 2
+                }
+            }
+        }
+        binding.rvGoods.layoutManager = gridLayoutManager
         binding.rvGoods.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,

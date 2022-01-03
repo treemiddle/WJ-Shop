@@ -74,11 +74,8 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         removeFragment()
         addTabItem(shops)
         addFragment(shops)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            setContentView(true)
-            loadingShimmer(false)
-        }, 5000)
+        setContentView(true)
+        loadingShimmer(false)
     }
 
     private fun initPagerAdapter() = with(binding) {

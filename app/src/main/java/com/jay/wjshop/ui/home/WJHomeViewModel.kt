@@ -129,6 +129,7 @@ class WJHomeViewModel @Inject constructor(
                 .doOnSubscribe { showLoading() }
                 .doAfterTerminate { hideLoading() }
                 .subscribe {
+                    makeLog(javaClass.simpleName, "okokokoko: $it")
                     if (it.isNotEmpty()) {
                         setShopInfoList(it)
                     } else {
@@ -167,6 +168,7 @@ class WJHomeViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .map(ShopMapper::mapToPresentation)
             .subscribe({
+                makeLog(javaClass.simpleName, "okokokok shop: $it")
                 _productList.value = it
             }, { t ->
                 makeLog(javaClass.simpleName, "getGoods error: ${t.localizedMessage}")
@@ -190,6 +192,7 @@ class WJHomeViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .map(ShopInfoMapper::mapToPresentation)
             .subscribe({
+                makeLog(javaClass.simpleName, "get in!!: $it")
                 localShopList(it)
             }, { t ->
                 makeLog(javaClass.simpleName, "getLocalShops error: ${t.localizedMessage}")
