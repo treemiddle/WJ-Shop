@@ -63,6 +63,14 @@ class WJHomeViewModel @Inject constructor(
     val goodsLayoutIsVisible: LiveData<Boolean>
         get() = _goodsLayoutIsVisible
 
+    private val _contentLayoutIsVisible = MutableLiveData(false)
+    val contentLayoutIsVisible: LiveData<Boolean>
+        get() = _contentLayoutIsVisible
+
+    private val _shimmerLayoutIsVisible = MutableLiveData(true)
+    val shimmerLayoutIsVisible: LiveData<Boolean>
+        get() = _shimmerLayoutIsVisible
+
     init {
         registerRx()
         getLocalShops()
@@ -82,6 +90,16 @@ class WJHomeViewModel @Inject constructor(
         return _shopInfoList.value ?: emptyList()
     }
 
+    fun setHeaderAndType() {
+        _headerShopName.value = getCurrentShop()?.name
+        _headerType.value = getCurrentShop()?.type
+    }
+
+    fun setViewSuccess() {
+        _contentLayoutIsVisible.value = true
+        _shimmerLayoutIsVisible.value = false
+    }
+
     private fun localShopList(shops: List<ShopInfo>) = localShopSubject.onNext(shops)
 
     private fun setShopInfoSubject(shopInfo: ShopInfo) = shopInfoSubject.onNext(shopInfo)
@@ -94,8 +112,6 @@ class WJHomeViewModel @Inject constructor(
 
     private fun setCurrentShopInfo(shopInfo: ShopInfo) {
         _currentShop.value = shopInfo
-        _headerShopName.value = shopInfo.name
-        _headerType.value = shopInfo.type
     }
 
     private fun setHeaderData() {
@@ -125,15 +141,16 @@ class WJHomeViewModel @Inject constructor(
 
     private fun registerRx() {
         compositeDisposable.addAll(
-            headerClickSubject.throttleFirst(750, TimeUnit.MILLISECONDS)
+            headerClickSubject.throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { showLoading() }
+                .doAfterTerminate { hideLoading() }
                 .subscribe { changeShopFromRandom(); showToast(1) },
 
             localShopSubject.observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { showLoading() }
                 .doAfterTerminate { hideLoading() }
                 .subscribe {
-                    makeLog(javaClass.simpleName, "okokokoko: $it")
                     if (it.isNotEmpty()) {
                         setShopInfoList(it)
                     } else {
@@ -172,7 +189,6 @@ class WJHomeViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .map(ShopMapper::mapToPresentation)
             .subscribe({
-                makeLog(javaClass.simpleName, "okokokok shop: $it")
                 _productList.value = it
             }, { t ->
                 makeLog(javaClass.simpleName, "getGoods error: ${t.localizedMessage}")
@@ -196,7 +212,6 @@ class WJHomeViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .map(ShopInfoMapper::mapToPresentation)
             .subscribe({
-                makeLog(javaClass.simpleName, "get in!!: $it")
                 localShopList(it)
             }, { t ->
                 makeLog(javaClass.simpleName, "getLocalShops error: ${t.localizedMessage}")

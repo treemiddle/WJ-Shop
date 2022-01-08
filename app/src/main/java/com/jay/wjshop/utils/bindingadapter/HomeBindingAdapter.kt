@@ -16,7 +16,7 @@ import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 @BindingAdapter("setTabLayoutListener", "setShopList")
 fun TabLayout.bindTabLayoutListener(listener: WJBaseListener.WJTabLayoutListener?, shops: List<Shop>?) {
     removeTabItem(this)
-    addTabItem(this, shops)
+    addTabItem(this, shops, listener)
 
     addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
         override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
@@ -87,7 +87,11 @@ fun RecyclerView.bindGoodsAdapter(
     }
 }
 
-private fun addTabItem(tabLayout: TabLayout, shops: List<Shop>?) {
+private fun addTabItem(
+    tabLayout: TabLayout,
+    shops: List<Shop>?,
+    listener: WJBaseListener.WJTabLayoutListener?
+) {
     shops?.let {
         it.forEachIndexed { index, _ ->
             val tab = tabLayout.newTab().setText(it[index].category)
@@ -96,6 +100,7 @@ private fun addTabItem(tabLayout: TabLayout, shops: List<Shop>?) {
     }
 
     moveToFirstTab(tabLayout)
+    listener?.loadTabSuccess(true)
 }
 
 private fun removeTabItem(tabLayout: TabLayout) {
@@ -122,6 +127,7 @@ private fun addFragment(
         }
 
         listener?.pageLimit(shops.size)
+        listener?.loadPagerSuccess(true)
         moveToFirstPage(viewPager)
     }
 }

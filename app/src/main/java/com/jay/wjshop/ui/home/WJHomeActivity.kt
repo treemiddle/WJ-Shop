@@ -1,9 +1,6 @@
 package com.jay.wjshop.ui.home
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import androidx.activity.viewModels
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityHomeBinding
@@ -13,12 +10,12 @@ import com.jay.wjshop.ui.base.WJBaseListener
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
-/**
- * [WJHomeActivity]
- * 선언형식이 아닌 펑션들 다 바인딩으로 빼야함..
- */
 @AndroidEntryPoint
 class WJHomeActivity :
     BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home),
@@ -29,25 +26,24 @@ class WJHomeActivity :
 
     override val viewModel: WJHomeViewModel by viewModels()
     @Inject lateinit var viewPagerAdapter: ProductPagerAdapter
-    @Inject lateinit var goodsAdapter: RecentlyGoodsAdapter
+    @Inject lateinit var recentlyGoodsAdapter: RecentlyGoodsAdapter
+
+    private val tabSubject = BehaviorSubject.createDefault(false)
+    private val pagerSubject = BehaviorSubject.createDefault(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loadingShimmer(true)
-        Handler(Looper.getMainLooper()).postDelayed({
-            setContentView(true)
-            loadingShimmer(false)
-        }, 5000)
+        registerRx()
     }
 
-    override fun setupBinding() {
-        binding.vm = viewModel
-        binding.pagerAdapter = viewPagerAdapter
-        binding.goodsAdapter = goodsAdapter
-        binding.tabListener = this
-        binding.pageListener = this
-        binding.recycleListener = this
+    override fun setupBinding() = with(binding) {
+        vm = viewModel
+        pagerAdapter = viewPagerAdapter
+        goodsAdapter = recentlyGoodsAdapter
+        tabListener = this@WJHomeActivity
+        pageListener = this@WJHomeActivity
+        recycleListener = this@WJHomeActivity
     }
 
     override fun setupObserver() {
@@ -84,21 +80,25 @@ class WJHomeActivity :
         rvRecently.smoothScrollToPosition(0)
     }
 
+    override fun loadTabSuccess(success: Boolean) = tabSubject.onNext(success)
+
+    override fun loadPagerSuccess(success: Boolean) = pagerSubject.onNext(success)
+
     private fun setupShopDataBinding(shops: List<Shop>) {
         binding.shops = shops
         binding.executePendingBindings()
     }
 
-    private fun loadingShimmer(result: Boolean) = if (result) {
-        binding.flShimmer.visibility = View.VISIBLE
-    } else {
-        binding.flShimmer.visibility = View.GONE
-    }
-
-    private fun setContentView(result: Boolean) = if (result) {
-        binding.cdlContent.visibility = View.VISIBLE
-    } else {
-        binding.cdlContent.visibility = View.INVISIBLE
+    private fun registerRx() {
+        Observable.combineLatest(
+            tabSubject,
+            pagerSubject,
+            { tab: Boolean, pager: Boolean -> tab to pager }
+        )
+            .filter { (t1: Boolean, t2: Boolean) -> t1 && t2 }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { viewModel.setHeaderAndType(); viewModel.setViewSuccess() }
+            .addTo(compositeDisposable)
     }
 
 }
