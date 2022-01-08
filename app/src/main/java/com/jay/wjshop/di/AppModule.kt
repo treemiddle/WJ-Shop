@@ -10,22 +10,22 @@ import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 
-@Module
-@InstallIn(ActivityComponent::class)
-object AppModule {
-
-    @Provides
-    @ActivityScoped
-    fun provideProductPagerAdapter(
-        @ActivityContext context: Context
-    ): ProductPagerAdapter {
-        return ProductPagerAdapter(context)
-    }
-
-    @Provides
-    @ActivityScoped
-    fun provideRecentlyGoodsAdapter(): RecentlyGoodsAdapter {
-        return RecentlyGoodsAdapter()
-    }
-
-}
+//@Module
+//@InstallIn(ActivityComponent::class)
+//object AppModule {
+//
+//    @Provides
+//    @ActivityScoped
+//    fun provideProductPagerAdapter(
+//        @ActivityContext context: Context
+//    ): ProductPagerAdapter {
+//        return ProductPagerAdapter(context)
+//    }
+//
+//    @Provides
+//    @ActivityScoped
+//    fun provideRecentlyGoodsAdapter(): RecentlyGoodsAdapter {
+//        return RecentlyGoodsAdapter()
+//    }
+//
+//}

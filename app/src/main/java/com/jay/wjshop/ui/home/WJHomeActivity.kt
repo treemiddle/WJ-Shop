@@ -14,7 +14,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.subjects.BehaviorSubject
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class WJHomeActivity :
@@ -25,9 +24,9 @@ class WJHomeActivity :
 {
 
     override val viewModel: WJHomeViewModel by viewModels()
-    @Inject lateinit var viewPagerAdapter: ProductPagerAdapter
-    @Inject lateinit var recentlyGoodsAdapter: RecentlyGoodsAdapter
 
+    private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
+    private val recentlyGoodsAdapter by lazy { RecentlyGoodsAdapter() }
     private val tabSubject = BehaviorSubject.createDefault(false)
     private val pagerSubject = BehaviorSubject.createDefault(false)
 
@@ -35,12 +34,11 @@ class WJHomeActivity :
         super.onCreate(savedInstanceState)
 
         registerRx()
+        initAdapter()
     }
 
     override fun setupBinding() = with(binding) {
         vm = viewModel
-        pagerAdapter = viewPagerAdapter
-        goodsAdapter = recentlyGoodsAdapter
         tabListener = this@WJHomeActivity
         pageListener = this@WJHomeActivity
         recycleListener = this@WJHomeActivity
@@ -87,6 +85,11 @@ class WJHomeActivity :
     private fun setupShopDataBinding(shops: List<Shop>) {
         binding.shops = shops
         binding.executePendingBindings()
+    }
+
+    private fun initAdapter() = with(binding) {
+        viewPager.adapter = viewPagerAdapter
+        rvRecently.adapter = recentlyGoodsAdapter
     }
 
     private fun registerRx() {

@@ -32,15 +32,6 @@
         <variable
             name="recycle_listener"
             type="com.jay.wjshop.ui.base.WJBaseListener.WJRecyclerListener" />
-
-        <variable
-            name="pager_adapter"
-            type="com.jay.wjshop.ui.home.product.ProductPagerAdapter" />
-
-        <variable
-            name="goods_adapter"
-            type="com.jay.wjshop.ui.home.RecentlyGoodsAdapter" />
-
     </data>
 
     <FrameLayout
@@ -169,7 +160,6 @@
 
                             <androidx.viewpager2.widget.ViewPager2
                                 android:id="@+id/view_pager"
-                                setPagerAdapter="@{pager_adapter}"
                                 setShopList="@{shops}"
                                 setViewPagerListener="@{page_listener}"
                                 android:layout_width="match_parent"
@@ -189,7 +179,6 @@
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/rv_recently"
-                                setGoodsAdapter="@{goods_adapter}"
                                 setGoodsList="@{vm.recentlyGoodsList}"
                                 setRecyclerListener="@{recycle_listener}"
                                 android:layout_width="match_parent"

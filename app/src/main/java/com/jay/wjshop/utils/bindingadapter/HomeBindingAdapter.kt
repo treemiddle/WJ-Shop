@@ -29,17 +29,14 @@ fun TabLayout.bindTabLayoutListener(listener: WJBaseListener.WJTabLayoutListener
 
 @BindingAdapter(
     "setViewPagerListener",
-    "setShopList",
-    "setPagerAdapter"
+    "setShopList"
 )
 fun ViewPager2.bindViewPagerListener(
     listener: WJBaseListener.WJViewPagerListener?,
-    shops: List<Shop>?,
-    pagerAdapter: ProductPagerAdapter?
+    shops: List<Shop>?
 ) {
-    pagerAdapter?.let { adapter = it }
-    removeFragment(pagerAdapter)
-    addFragment(this, shops, pagerAdapter, listener)
+    removeFragment(this)
+    addFragment(this, shops, listener)
 
     registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -68,22 +65,14 @@ fun ViewPager2.bindViewPagerListener(
     })
 }
 
-@BindingAdapter(
-    "setGoodsAdapter",
-    "setGoodsList",
-    "setRecyclerListener"
-)
-fun RecyclerView.bindGoodsAdapter(
-    goodsAdapter: RecentlyGoodsAdapter?,
-    goods: List<Goods>?,
-    listener: WJBaseListener.WJRecyclerListener?
-) {
-    goodsAdapter?.let { adapter = it }
-
-    if (goods.isNullOrEmpty()) {
-        goodsAdapter?.submitList(null)
-    } else {
-        setRecentlyGoodsList(goodsAdapter, goods, listener)
+@BindingAdapter("setGoodsList", "setRecyclerListener")
+fun RecyclerView.bindGoodsAdapter(goods: List<Goods>?, listener: WJBaseListener.WJRecyclerListener?) {
+    with((adapter as RecentlyGoodsAdapter)) {
+        if (goods.isNullOrEmpty()) {
+            this.submitList(null)
+        } else {
+            setRecentlyGoodsList(this@bindGoodsAdapter, goods, listener)
+        }
     }
 }
 
@@ -118,12 +107,13 @@ private fun moveToFirstTab(tabLayout: TabLayout) {
 private fun addFragment(
     viewPager: ViewPager2,
     shops: List<Shop>?,
-    pagerAdapter: ProductPagerAdapter?,
     listener: WJBaseListener.WJViewPagerListener?
 ) {
-    if (shops != null && pagerAdapter != null) {
-        shops.forEachIndexed { index, _ ->
-            pagerAdapter.add(ProductFragment.newInstance(index))
+    val adapter = (viewPager.adapter as ProductPagerAdapter)
+
+    shops?.let {
+        it.forEachIndexed { index, _ ->
+            adapter.add(ProductFragment.newInstance(index))
         }
 
         listener?.pageLimit(shops.size)
@@ -132,9 +122,9 @@ private fun addFragment(
     }
 }
 
-private fun removeFragment(pagerAdapter: ProductPagerAdapter?) {
-    pagerAdapter?.let {
-        if (it.itemCount > 0) it.clear()
+private fun removeFragment(viewPager: ViewPager2) {
+    (viewPager.adapter as ProductPagerAdapter).run {
+        if (this.itemCount > 0) this.clear()
     }
 }
 
@@ -143,13 +133,13 @@ private fun moveToFirstPage(viewPager: ViewPager2) {
 }
 
 private fun setRecentlyGoodsList(
-    goodsAdapter: RecentlyGoodsAdapter?,
+    recyclerView: RecyclerView,
     goodsList: List<Goods>?,
     listener: WJBaseListener.WJRecyclerListener?
 ) {
     goodsList?.let {
         val newList = it.take(8)
-        goodsAdapter?.submitList(newList)
+        (recyclerView.adapter as RecentlyGoodsAdapter).run { this.submitList(newList) }
         listener?.saveGoods()
     }
 }
