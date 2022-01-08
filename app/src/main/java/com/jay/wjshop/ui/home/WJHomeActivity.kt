@@ -7,7 +7,6 @@ import android.view.View
 import androidx.activity.viewModels
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityHomeBinding
-import com.jay.wjshop.model.Goods
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.ui.base.BaseActivity
 import com.jay.wjshop.ui.base.WJBaseListener
@@ -24,43 +23,37 @@ import javax.inject.Inject
 class WJHomeActivity :
     BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home),
     WJBaseListener.WJTabLayoutListener,
-    WJBaseListener.WJViewPagerListener
+    WJBaseListener.WJViewPagerListener,
+    WJBaseListener.WJRecyclerListener
 {
 
     override val viewModel: WJHomeViewModel by viewModels()
     @Inject lateinit var viewPagerAdapter: ProductPagerAdapter
-
-    private val recentlyGoodsAdapter by lazy { RecentlyGoodsAdapter() }
+    @Inject lateinit var goodsAdapter: RecentlyGoodsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         loadingShimmer(true)
-        initRecentlyGoodsAdapter()
         Handler(Looper.getMainLooper()).postDelayed({
             setContentView(true)
             loadingShimmer(false)
-        }, 3000)
+        }, 5000)
     }
 
     override fun setupBinding() {
         binding.vm = viewModel
+        binding.pagerAdapter = viewPagerAdapter
+        binding.goodsAdapter = goodsAdapter
         binding.tabListener = this
         binding.pageListener = this
-        binding.pagerAdapter = viewPagerAdapter
+        binding.recycleListener = this
     }
 
     override fun setupObserver() {
         with(viewModel) {
             productList.observe(this@WJHomeActivity, {
                 it?.let { shops -> setupShopDataBinding(shops) }
-            })
-            recentlyGoodsList.observe(this@WJHomeActivity, {
-                if (it.isNotEmpty()) {
-                    showRecentlyGoods(true, it)
-                } else {
-                    showRecentlyGoods(false)
-                }
             })
             toast.observe(this@WJHomeActivity, {
                 it.getContentIfNotHandled()?.let {
@@ -87,33 +80,13 @@ class WJHomeActivity :
         viewPager.offscreenPageLimit = shopSize
     }
 
+    override fun saveGoods() = with(binding) {
+        rvRecently.smoothScrollToPosition(0)
+    }
+
     private fun setupShopDataBinding(shops: List<Shop>) {
         binding.shops = shops
         binding.executePendingBindings()
-    }
-
-    private fun initRecentlyGoodsAdapter() {
-        binding.rvRecently.adapter = recentlyGoodsAdapter
-    }
-
-    private fun showRecentlyGoods(state: Boolean, goodsList: List<Goods>? = null) {
-        if (state) {
-            binding.tvCurrentProduct.visibility = View.VISIBLE
-            binding.rvRecently.visibility = View.VISIBLE
-            setRecentlyGoodsList(goodsList)
-        } else {
-            recentlyGoodsAdapter.submitList(null)
-            binding.tvCurrentProduct.visibility = View.GONE
-            binding.rvRecently.visibility = View.GONE
-        }
-    }
-
-    private fun setRecentlyGoodsList(goodsList: List<Goods>?) {
-        goodsList?.let {
-            val newList = it.take(8)
-            recentlyGoodsAdapter.submitList(newList)
-            binding.rvRecently.smoothScrollToPosition(0)
-        }
     }
 
     private fun loadingShimmer(result: Boolean) = if (result) {

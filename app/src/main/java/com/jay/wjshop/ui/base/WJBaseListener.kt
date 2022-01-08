@@ -10,4 +10,8 @@ interface WJBaseListener {
         fun onPageSelected(currentPosition: Int)
         fun pageLimit(shopSize: Int)
     }
+
+    interface WJRecyclerListener {
+        fun saveGoods()
+    }
 }

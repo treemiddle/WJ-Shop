@@ -59,6 +59,10 @@ class WJHomeViewModel @Inject constructor(
     val recentlyGoodsList: LiveData<List<Goods>>
         get() = _recentlyGoodsList
 
+    private val _goodsLayoutIsVisible = MutableLiveData(false)
+    val goodsLayoutIsVisible: LiveData<Boolean>
+        get() = _goodsLayoutIsVisible
+
     init {
         registerRx()
         getLocalShops()
@@ -221,6 +225,16 @@ class WJHomeViewModel @Inject constructor(
 
     private fun setRecentlyGoodsList(goodsList: List<Goods>) {
         _recentlyGoodsList.value = goodsList
+
+        if (goodsList.isNotEmpty()) {
+            setGoodsLayoutState(true)
+        } else {
+            setGoodsLayoutState(false)
+        }
+    }
+
+    private fun setGoodsLayoutState(state: Boolean) {
+        _goodsLayoutIsVisible.value = state
     }
 
     /**

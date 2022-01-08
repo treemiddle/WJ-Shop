@@ -18,6 +18,10 @@
             type="List&lt;com.jay.wjshop.model.Shop>" />
 
         <variable
+            name="goods"
+            type="List&lt;com.jay.wjshop.model.Goods>" />
+
+        <variable
             name="tab_listener"
             type="com.jay.wjshop.ui.base.WJBaseListener.WJTabLayoutListener" />
 
@@ -28,6 +32,14 @@
         <variable
             name="pager_adapter"
             type="com.jay.wjshop.ui.home.product.ProductPagerAdapter" />
+
+        <variable
+            name="goods_adapter"
+            type="com.jay.wjshop.ui.home.RecentlyGoodsAdapter" />
+
+        <variable
+            name="recycle_listener"
+            type="com.jay.wjshop.ui.base.WJBaseListener.WJRecyclerListener" />
     </data>
 
     <FrameLayout
@@ -131,10 +143,10 @@
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tab_layout"
+                        setShopList="@{shops}"
+                        setTabLayoutListener="@{tab_listener}"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        setTabLayoutListener="@{tab_listener}"
-                        setShopList="@{shops}"
                         android:overScrollMode="never"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         app:tabGravity="fill"
@@ -156,10 +168,10 @@
 
                             <androidx.viewpager2.widget.ViewPager2
                                 android:id="@+id/view_pager"
-                                android:layout_width="match_parent"
-                                setViewPagerListener="@{page_listener}"
-                                setShopList="@{shops}"
                                 setPagerAdapter="@{pager_adapter}"
+                                setShopList="@{shops}"
+                                setViewPagerListener="@{page_listener}"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="20dp" />
 
@@ -170,17 +182,22 @@
                                 android:layout_marginStart="16dp"
                                 android:text="@string/txt_recently_goods"
                                 android:textSize="24dp"
+                                android:visibility="@{vm.goodsLayoutIsVisible ? View.VISIBLE : View.GONE}"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/ctl_header" />
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/rv_recently"
+                                setGoodsAdapter="@{goods_adapter}"
+                                setGoodsList="@{vm.recentlyGoodsList}"
+                                setRecyclerListener="@{recycle_listener}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="20dp"
                                 android:layout_marginBottom="20dp"
                                 android:orientation="horizontal"
                                 android:padding="10dp"
+                                android:visibility="@{vm.goodsLayoutIsVisible ? View.VISIBLE : View.GONE}"
                                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                 tools:itemCount="8"
                                 tools:listitem="@layout/item_goods" />

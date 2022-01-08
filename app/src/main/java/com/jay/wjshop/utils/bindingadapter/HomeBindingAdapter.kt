@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.jay.common.makeLog
+import com.jay.wjshop.model.Goods
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.ui.base.WJBaseListener
+import com.jay.wjshop.ui.home.RecentlyGoodsAdapter
 import com.jay.wjshop.ui.home.product.ProductFragment
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 
@@ -66,6 +68,25 @@ fun ViewPager2.bindViewPagerListener(
     })
 }
 
+@BindingAdapter(
+    "setGoodsAdapter",
+    "setGoodsList",
+    "setRecyclerListener"
+)
+fun RecyclerView.bindGoodsAdapter(
+    goodsAdapter: RecentlyGoodsAdapter?,
+    goods: List<Goods>?,
+    listener: WJBaseListener.WJRecyclerListener?
+) {
+    goodsAdapter?.let { adapter = it }
+
+    if (goods.isNullOrEmpty()) {
+        goodsAdapter?.submitList(null)
+    } else {
+        setRecentlyGoodsList(goodsAdapter, goods, listener)
+    }
+}
+
 private fun addTabItem(tabLayout: TabLayout, shops: List<Shop>?) {
     shops?.let {
         it.forEachIndexed { index, _ ->
@@ -113,4 +134,16 @@ private fun removeFragment(pagerAdapter: ProductPagerAdapter?) {
 
 private fun moveToFirstPage(viewPager: ViewPager2) {
     viewPager.currentItem = 0
+}
+
+private fun setRecentlyGoodsList(
+    goodsAdapter: RecentlyGoodsAdapter?,
+    goodsList: List<Goods>?,
+    listener: WJBaseListener.WJRecyclerListener?
+) {
+    goodsList?.let {
+        val newList = it.take(8)
+        goodsAdapter?.submitList(newList)
+        listener?.saveGoods()
+    }
 }

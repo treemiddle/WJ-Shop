@@ -1,7 +1,7 @@
 package com.jay.wjshop.di
 
 import android.content.Context
-import com.jay.wjshop.ui.home.product.ProductAdapter
+import com.jay.wjshop.ui.home.RecentlyGoodsAdapter
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 import dagger.Module
 import dagger.Provides
@@ -20,6 +20,12 @@ object AppModule {
         @ActivityContext context: Context
     ): ProductPagerAdapter {
         return ProductPagerAdapter(context)
+    }
+
+    @Provides
+    @ActivityScoped
+    fun provideRecentlyGoodsAdapter(): RecentlyGoodsAdapter {
+        return RecentlyGoodsAdapter()
     }
 
 }
