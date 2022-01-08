@@ -81,13 +81,15 @@ class ProductViewModel @Inject constructor(
         return ShopSalesButton()
     }
 
-    private fun newShopSalesList(salesList: List<ShopSales>) {
-        val newList = mutableListOf<ShopSalesModel>().apply {
-            addAll(salesList)
-            add(createShopSales())
-        }
+    private fun newShopSalesList(salesList: List<ShopSales>?) {
+        salesList?.let {
+            val newList = mutableListOf<ShopSalesModel>().apply {
+                addAll(it)
+                add(createShopSales())
+            }
 
-        _salesList.value = newList
+            _salesList.value = newList
+        }
     }
 
     private fun registerRx() {

@@ -1,6 +1,5 @@
 package com.jay.wjshop.ui.home.product
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.FragmentProductBinding
 import com.jay.wjshop.model.ShopSales
 import com.jay.wjshop.ui.home.WJHomeViewModel
 import com.jay.wjshop.utils.ext.shortToast
-import com.jay.wjshop.utils.getRecyclerAnimation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.jvm.internal.MagicApiIntrinsics
 
 /**
  * [ProductFragment]
@@ -30,7 +25,6 @@ class ProductFragment : Fragment() {
 
     private val activityViewModel by activityViewModels<WJHomeViewModel>()
     private val viewModel by viewModels<ProductViewModel>()
-
     private lateinit var binding: FragmentProductBinding
     private val position by lazy { arguments?.getInt(FRAGMENT_POSITION) }
     private val adapter by lazy {
@@ -61,24 +55,17 @@ class ProductFragment : Fragment() {
 
         setupBinding()
         setupObserver()
+        initData()
         initAdapter()
     }
 
     private fun setupBinding() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        position?.let { viewModel.setProducts(activityViewModel.getProductList()[it]) }
     }
 
     private fun setupObserver() {
         with(viewModel) {
-            salesList.observe(viewLifecycleOwner, {
-                if (it.isNotEmpty()) {
-                    adapter.submitList(it)
-                } else {
-                    adapter.submitList(null)
-                }
-            })
             toast.observe(viewLifecycleOwner, {
                 it.getContentIfNotHandled()?.let {
                     context?.shortToast(
@@ -92,34 +79,12 @@ class ProductFragment : Fragment() {
         }
     }
 
-    private fun initAdapter() {
-        binding.rvGoods.adapter = adapter
-        binding.rvGoods.animation = getRecyclerAnimation(context)
-        val gridLayoutManager = GridLayoutManager(context, 2)
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (adapter.getItemViewType(position)) {
-                    ProductAdapter.MAIN -> 1
-                    else -> 2
-                }
-            }
-        }
-        binding.rvGoods.layoutManager = gridLayoutManager
-        binding.rvGoods.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                super.getItemOffsets(outRect, view, parent, state)
+    private fun initData() {
+        position?.let { viewModel.setProducts(activityViewModel.getProductList()[it]) }
+    }
 
-                outRect.top = 10
-                outRect.bottom = 10
-                outRect.left = 10
-                outRect.right = 10
-            }
-        })
+    private fun initAdapter() = with(binding) {
+        rvGoods.adapter = adapter
     }
 
     companion object {
