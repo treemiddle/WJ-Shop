@@ -1,22 +1,17 @@
 package com.jay.wjshop.ui.home
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import com.jay.common.makeLog
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityHomeBinding
 import com.jay.wjshop.model.Goods
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.ui.base.BaseActivity
+import com.jay.wjshop.ui.base.WJBaseListener
 import com.jay.wjshop.ui.home.product.ProductFragment
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 import com.jay.wjshop.utils.ext.shortToast
@@ -27,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * 선언형식이 아닌 펑션들 다 바인딩으로 빼야함..
  */
 @AndroidEntryPoint
-class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home) {
+class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home), WJBaseListener.WJTabLayoutListener {
 
     override val viewModel: WJHomeViewModel by viewModels()
     private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
@@ -39,17 +34,22 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         loadingShimmer(true)
         initRecentlyGoodsAdapter()
         initPagerAdapter()
-        setupTabLayout()
     }
 
     override fun setupBinding() {
         binding.vm = viewModel
+        binding.listener = this
     }
 
     override fun setupObserver() {
         with(viewModel) {
             productList.observe(this@WJHomeActivity, {
-                it?.let { shops -> setTabAndPagers(shops) }
+                it?.let { shops ->
+                    binding.shops = shops
+                    binding.executePendingBindings()
+
+                    setTabAndPagers(shops)
+                }
             })
             recentlyGoodsList.observe(this@WJHomeActivity, {
                 if (it.isNotEmpty()) {
@@ -69,10 +69,13 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         }
     }
 
+    override fun onTabSelected(currentPosition: Int) = with(binding) {
+        nsv.smoothScrollTo(0, 0)
+        viewPager.currentItem = currentPosition
+    }
+
     private fun setTabAndPagers(shops: List<Shop>) {
-        removeTabItem()
         removeFragment()
-        addTabItem(shops)
         addFragment(shops)
         setContentView(true)
         loadingShimmer(false)
@@ -108,42 +111,9 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         })
     }
 
-    private fun setupTabLayout() = with(binding) {
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
-            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab?.let {
-                    nsv.smoothScrollTo(0, 0)
-                    viewPager.currentItem = it.position
-                }
-            }
-        })
-    }
-
-    private fun addTabItem(shops: List<Shop>) {
-        for (i in shops.indices) {
-            val tab = binding.tabLayout.newTab().setText(shops[i].category)
-            binding.tabLayout.addTab(tab)
-        }
-
-        moveToFirstTab()
-    }
-
-    private fun removeTabItem() {
-        if (binding.tabLayout.tabCount > 0) {
-            binding.tabLayout.removeAllTabs()
-        }
-    }
-
-    private fun moveToFirstTab() {
-        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0))
-    }
-
     private fun moveToFirstPager() {
         binding.viewPager.currentItem = 0
     }
-
 
     private fun addFragment(shops: List<Shop>) {
         shops.forEachIndexed { index, _ ->
