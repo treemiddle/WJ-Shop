@@ -14,16 +14,20 @@
             type="com.jay.wjshop.ui.home.WJHomeViewModel" />
 
         <variable
-            name="goods_list"
-            type="List&lt;com.jay.wjshop.model.Goods>" />
-
-        <variable
             name="shops"
             type="List&lt;com.jay.wjshop.model.Shop>" />
 
         <variable
-            name="listener"
+            name="tab_listener"
             type="com.jay.wjshop.ui.base.WJBaseListener.WJTabLayoutListener" />
+
+        <variable
+            name="page_listener"
+            type="com.jay.wjshop.ui.base.WJBaseListener.WJViewPagerListener" />
+
+        <variable
+            name="pager_adapter"
+            type="com.jay.wjshop.ui.home.product.ProductPagerAdapter" />
     </data>
 
     <FrameLayout
@@ -129,7 +133,7 @@
                         android:id="@+id/tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        setTabLayoutListener="@{listener}"
+                        setTabLayoutListener="@{tab_listener}"
                         setShopList="@{shops}"
                         android:overScrollMode="never"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -153,6 +157,9 @@
                             <androidx.viewpager2.widget.ViewPager2
                                 android:id="@+id/view_pager"
                                 android:layout_width="match_parent"
+                                setViewPagerListener="@{page_listener}"
+                                setShopList="@{shops}"
+                                setPagerAdapter="@{pager_adapter}"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="20dp" />
 

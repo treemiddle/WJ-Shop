@@ -1,31 +1,35 @@
 package com.jay.wjshop.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.activity.viewModels
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.jay.common.makeLog
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityHomeBinding
 import com.jay.wjshop.model.Goods
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.ui.base.BaseActivity
 import com.jay.wjshop.ui.base.WJBaseListener
-import com.jay.wjshop.ui.home.product.ProductFragment
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * [WJHomeActivity]
  * 선언형식이 아닌 펑션들 다 바인딩으로 빼야함..
  */
 @AndroidEntryPoint
-class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home), WJBaseListener.WJTabLayoutListener {
+class WJHomeActivity :
+    BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home),
+    WJBaseListener.WJTabLayoutListener,
+    WJBaseListener.WJViewPagerListener
+{
 
     override val viewModel: WJHomeViewModel by viewModels()
-    private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
+    @Inject lateinit var viewPagerAdapter: ProductPagerAdapter
+
     private val recentlyGoodsAdapter by lazy { RecentlyGoodsAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,23 +37,23 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
 
         loadingShimmer(true)
         initRecentlyGoodsAdapter()
-        initPagerAdapter()
+        Handler(Looper.getMainLooper()).postDelayed({
+            setContentView(true)
+            loadingShimmer(false)
+        }, 3000)
     }
 
     override fun setupBinding() {
         binding.vm = viewModel
-        binding.listener = this
+        binding.tabListener = this
+        binding.pageListener = this
+        binding.pagerAdapter = viewPagerAdapter
     }
 
     override fun setupObserver() {
         with(viewModel) {
             productList.observe(this@WJHomeActivity, {
-                it?.let { shops ->
-                    binding.shops = shops
-                    binding.executePendingBindings()
-
-                    setTabAndPagers(shops)
-                }
+                it?.let { shops -> setupShopDataBinding(shops) }
             })
             recentlyGoodsList.observe(this@WJHomeActivity, {
                 if (it.isNotEmpty()) {
@@ -74,60 +78,18 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         viewPager.currentItem = currentPosition
     }
 
-    private fun setTabAndPagers(shops: List<Shop>) {
-        removeFragment()
-        addFragment(shops)
-        setContentView(true)
-        loadingShimmer(false)
+    override fun onPageSelected(currentPosition: Int) = with(binding) {
+        nsv.smoothScrollTo(0, 0)
+        tabLayout.selectTab(tabLayout.getTabAt(currentPosition))
     }
 
-    private fun initPagerAdapter() = with(binding) {
-        viewPager.adapter = viewPagerAdapter
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                try {
-                    val view = (viewPager.getChildAt(0) as RecyclerView).layoutManager?.findViewByPosition(position)
-
-                    view?.let {
-                        val width = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
-                        val height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                        it.measure(width, height)
-
-                        if (viewPager.layoutParams.height != view.measuredHeight) {
-                            viewPager.layoutParams = (viewPager.layoutParams).also { lp ->
-                                lp.height = view.measuredHeight
-                            }
-                        }
-                    }
-
-                    tabLayout.selectTab(tabLayout.getTabAt(position))
-                    nsv.smoothScrollTo(0, 0)
-                } catch (e: Exception) {
-                    makeLog(javaClass.simpleName, "onPageSelected: ${e.localizedMessage}")
-                    e.printStackTrace()
-                }
-            }
-        })
+    override fun pageLimit(shopSize: Int) = with(binding) {
+        viewPager.offscreenPageLimit = shopSize
     }
 
-    private fun moveToFirstPager() {
-        binding.viewPager.currentItem = 0
-    }
-
-    private fun addFragment(shops: List<Shop>) {
-        shops.forEachIndexed { index, _ ->
-            viewPagerAdapter.add(ProductFragment.newInstance(index))
-        }
-
-        binding.viewPager.offscreenPageLimit = shops.size
-        moveToFirstPager()
-    }
-
-    private fun removeFragment() {
-        if (viewPagerAdapter.itemCount > 0) {
-            viewPagerAdapter.clear()
-        }
+    private fun setupShopDataBinding(shops: List<Shop>) {
+        binding.shops = shops
+        binding.executePendingBindings()
     }
 
     private fun initRecentlyGoodsAdapter() {
