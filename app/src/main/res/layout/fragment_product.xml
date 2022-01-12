@@ -8,10 +8,12 @@
         <variable
             name="vm"
             type="com.jay.wjshop.ui.home.product.ProductViewModel" />
+
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_goods"
+        setProductList="@{vm.salesList}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"

@@ -14,8 +14,24 @@
             type="com.jay.wjshop.ui.home.WJHomeViewModel" />
 
         <variable
-            name="goods_list"
+            name="shops"
+            type="List&lt;com.jay.wjshop.model.Shop>" />
+
+        <variable
+            name="goods"
             type="List&lt;com.jay.wjshop.model.Goods>" />
+
+        <variable
+            name="tab_listener"
+            type="com.jay.wjshop.ui.base.WJBaseListener.WJTabLayoutListener" />
+
+        <variable
+            name="page_listener"
+            type="com.jay.wjshop.ui.base.WJBaseListener.WJViewPagerListener" />
+
+        <variable
+            name="recycle_listener"
+            type="com.jay.wjshop.ui.base.WJBaseListener.WJRecyclerListener" />
     </data>
 
     <FrameLayout
@@ -31,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
-                android:visibility="invisible"
+                android:visibility="@{vm.contentLayoutIsVisible ? View.VISIBLE : View.INVISIBLE}"
                 tools:context=".coordinator.CoordinatorActivity">
 
                 <com.google.android.material.appbar.AppBarLayout
@@ -119,6 +135,8 @@
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tab_layout"
+                        setShopList="@{shops}"
+                        setTabLayoutListener="@{tab_listener}"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         android:overScrollMode="never"
@@ -142,6 +160,8 @@
 
                             <androidx.viewpager2.widget.ViewPager2
                                 android:id="@+id/view_pager"
+                                setShopList="@{shops}"
+                                setViewPagerListener="@{page_listener}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="20dp" />
@@ -153,17 +173,21 @@
                                 android:layout_marginStart="16dp"
                                 android:text="@string/txt_recently_goods"
                                 android:textSize="24dp"
+                                android:visibility="@{vm.goodsLayoutIsVisible ? View.VISIBLE : View.GONE}"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/ctl_header" />
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/rv_recently"
+                                setGoodsList="@{vm.recentlyGoodsList}"
+                                setRecyclerListener="@{recycle_listener}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="20dp"
                                 android:layout_marginBottom="20dp"
                                 android:orientation="horizontal"
                                 android:padding="10dp"
+                                android:visibility="@{vm.goodsLayoutIsVisible ? View.VISIBLE : View.GONE}"
                                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                                 tools:itemCount="8"
                                 tools:listitem="@layout/item_goods" />
@@ -180,6 +204,7 @@
                 android:id="@+id/fl_shimmer"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:visibility="@{vm.shimmerLayoutIsVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -266,6 +291,15 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{vm.isLoading ? View.VISIBLE : View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

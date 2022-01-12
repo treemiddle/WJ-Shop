@@ -2,7 +2,6 @@ package com.jay.wjshop.ui.home.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.jay.wjshop.databinding.ItemProductBinding
 import com.jay.wjshop.databinding.ItemProductButtonBinding
@@ -113,4 +112,5 @@ class ProductAdapter(
         const val MAIN = 0
         const val BUTTON = 1
     }
+
 }

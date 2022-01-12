@@ -1,62 +1,53 @@
 package com.jay.wjshop.ui.home
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.jay.common.makeLog
 import com.jay.wjshop.R
 import com.jay.wjshop.databinding.ActivityHomeBinding
-import com.jay.wjshop.model.Goods
 import com.jay.wjshop.model.Shop
 import com.jay.wjshop.ui.base.BaseActivity
-import com.jay.wjshop.ui.home.product.ProductFragment
+import com.jay.wjshop.ui.base.WJBaseListener
 import com.jay.wjshop.ui.home.product.ProductPagerAdapter
 import com.jay.wjshop.utils.ext.shortToast
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.subjects.BehaviorSubject
 
-/**
- * [WJHomeActivity]
- * 선언형식이 아닌 펑션들 다 바인딩으로 빼야함..
- */
 @AndroidEntryPoint
-class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home) {
+class WJHomeActivity :
+    BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layout.activity_home),
+    WJBaseListener.WJTabLayoutListener,
+    WJBaseListener.WJViewPagerListener,
+    WJBaseListener.WJRecyclerListener
+{
 
     override val viewModel: WJHomeViewModel by viewModels()
+
     private val viewPagerAdapter by lazy { ProductPagerAdapter(this) }
     private val recentlyGoodsAdapter by lazy { RecentlyGoodsAdapter() }
+    private val tabSubject = BehaviorSubject.createDefault(false)
+    private val pagerSubject = BehaviorSubject.createDefault(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loadingShimmer(true)
-        initRecentlyGoodsAdapter()
-        initPagerAdapter()
-        setupTabLayout()
+        registerRx()
+        initAdapter()
     }
 
-    override fun setupBinding() {
-        binding.vm = viewModel
+    override fun setupBinding() = with(binding) {
+        vm = viewModel
+        tabListener = this@WJHomeActivity
+        pageListener = this@WJHomeActivity
+        recycleListener = this@WJHomeActivity
     }
 
     override fun setupObserver() {
         with(viewModel) {
             productList.observe(this@WJHomeActivity, {
-                it?.let { shops -> setTabAndPagers(shops) }
-            })
-            recentlyGoodsList.observe(this@WJHomeActivity, {
-                if (it.isNotEmpty()) {
-                    showRecentlyGoods(true, it)
-                } else {
-                    showRecentlyGoods(false)
-                }
+                it?.let { shops -> setupShopDataBinding(shops) }
             })
             toast.observe(this@WJHomeActivity, {
                 it.getContentIfNotHandled()?.let {
@@ -69,131 +60,48 @@ class WJHomeActivity : BaseActivity<ActivityHomeBinding, WJHomeViewModel>(R.layo
         }
     }
 
-    private fun setTabAndPagers(shops: List<Shop>) {
-        removeTabItem()
-        removeFragment()
-        addTabItem(shops)
-        addFragment(shops)
-        setContentView(true)
-        loadingShimmer(false)
+    override fun onTabSelected(currentPosition: Int) = with(binding) {
+        nsv.smoothScrollTo(0, 0)
+        viewPager.currentItem = currentPosition
     }
 
-    private fun initPagerAdapter() = with(binding) {
+    override fun onPageSelected(currentPosition: Int) = with(binding) {
+        nsv.smoothScrollTo(0, 0)
+        tabLayout.selectTab(tabLayout.getTabAt(currentPosition))
+    }
+
+    override fun pageLimit(shopSize: Int) = with(binding) {
+        viewPager.offscreenPageLimit = shopSize
+    }
+
+    override fun saveGoods() = with(binding) {
+        rvRecently.smoothScrollToPosition(0)
+    }
+
+    override fun loadTabSuccess(success: Boolean) = tabSubject.onNext(success)
+
+    override fun loadPagerSuccess(success: Boolean) = pagerSubject.onNext(success)
+
+    private fun setupShopDataBinding(shops: List<Shop>) {
+        binding.shops = shops
+        binding.executePendingBindings()
+    }
+
+    private fun initAdapter() = with(binding) {
         viewPager.adapter = viewPagerAdapter
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                try {
-                    val view = (viewPager.getChildAt(0) as RecyclerView).layoutManager?.findViewByPosition(position)
-
-                    view?.let {
-                        val width = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
-                        val height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                        it.measure(width, height)
-
-                        if (viewPager.layoutParams.height != view.measuredHeight) {
-                            viewPager.layoutParams = (viewPager.layoutParams).also { lp ->
-                                lp.height = view.measuredHeight
-                            }
-                        }
-                    }
-
-                    tabLayout.selectTab(tabLayout.getTabAt(position))
-                    nsv.smoothScrollTo(0, 0)
-                } catch (e: Exception) {
-                    makeLog(javaClass.simpleName, "onPageSelected: ${e.localizedMessage}")
-                    e.printStackTrace()
-                }
-            }
-        })
+        rvRecently.adapter = recentlyGoodsAdapter
     }
 
-    private fun setupTabLayout() = with(binding) {
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
-            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab?.let {
-                    nsv.smoothScrollTo(0, 0)
-                    viewPager.currentItem = it.position
-                }
-            }
-        })
-    }
-
-    private fun addTabItem(shops: List<Shop>) {
-        for (i in shops.indices) {
-            val tab = binding.tabLayout.newTab().setText(shops[i].category)
-            binding.tabLayout.addTab(tab)
-        }
-
-        moveToFirstTab()
-    }
-
-    private fun removeTabItem() {
-        if (binding.tabLayout.tabCount > 0) {
-            binding.tabLayout.removeAllTabs()
-        }
-    }
-
-    private fun moveToFirstTab() {
-        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0))
-    }
-
-    private fun moveToFirstPager() {
-        binding.viewPager.currentItem = 0
-    }
-
-
-    private fun addFragment(shops: List<Shop>) {
-        shops.forEachIndexed { index, _ ->
-            viewPagerAdapter.add(ProductFragment.newInstance(index))
-        }
-
-        binding.viewPager.offscreenPageLimit = shops.size
-        moveToFirstPager()
-    }
-
-    private fun removeFragment() {
-        if (viewPagerAdapter.itemCount > 0) {
-            viewPagerAdapter.clear()
-        }
-    }
-
-    private fun initRecentlyGoodsAdapter() {
-        binding.rvRecently.adapter = recentlyGoodsAdapter
-    }
-
-    private fun showRecentlyGoods(state: Boolean, goodsList: List<Goods>? = null) {
-        if (state) {
-            binding.tvCurrentProduct.visibility = View.VISIBLE
-            binding.rvRecently.visibility = View.VISIBLE
-            setRecentlyGoodsList(goodsList)
-        } else {
-            recentlyGoodsAdapter.submitList(null)
-            binding.tvCurrentProduct.visibility = View.GONE
-            binding.rvRecently.visibility = View.GONE
-        }
-    }
-
-    private fun setRecentlyGoodsList(goodsList: List<Goods>?) {
-        goodsList?.let {
-            val newList = it.take(8)
-            recentlyGoodsAdapter.submitList(newList)
-            binding.rvRecently.smoothScrollToPosition(0)
-        }
-    }
-
-    private fun loadingShimmer(result: Boolean) = if (result) {
-        binding.flShimmer.visibility = View.VISIBLE
-    } else {
-        binding.flShimmer.visibility = View.GONE
-    }
-
-    private fun setContentView(result: Boolean) = if (result) {
-        binding.cdlContent.visibility = View.VISIBLE
-    } else {
-        binding.cdlContent.visibility = View.INVISIBLE
+    private fun registerRx() {
+        Observable.combineLatest(
+            tabSubject,
+            pagerSubject,
+            { tab: Boolean, pager: Boolean -> tab to pager }
+        )
+            .filter { (t1: Boolean, t2: Boolean) -> t1 && t2 }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { viewModel.setHeaderAndType(); viewModel.setViewSuccess() }
+            .addTo(compositeDisposable)
     }
 
 }
